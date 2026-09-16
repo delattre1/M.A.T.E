@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.cache/
+*.tmp
+plan.json
+plan.html
+plans/
+plow-credentials
+.env

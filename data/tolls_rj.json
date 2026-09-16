@@ -1,0 +1,59 @@
+{
+  "_note": "Curated toll plazas for the Rio serra corridors. Prices and coordinates are APPROXIMATE and human-maintained: OSM tags which ways are tolled but not what they cost, and no free API publishes Brazilian toll tariffs. Every figure derived from this file is stamped 'curated' and rendered with a ~ so the user knows to check. Verify tariffs at gov.br/antt before a demo and bump as_of.",
+  "as_of": "2026-09",
+  "match_km": 3.0,
+  "plazas": [
+    {
+      "id": "concer-br040-caxias",
+      "name": "Pedágio BR-040 (Duque de Caxias / Xerém)",
+      "road": "BR-040",
+      "operator": "Concer",
+      "lat": -22.5386,
+      "lon": -43.3069,
+      "price_brl": 18.30,
+      "charges": "both_ways",
+      "serves": ["Petrópolis", "Miguel Pereira", "Itaipava", "Correas"],
+      "confidence": "approximate",
+      "verify_url": "https://www.gov.br/antt/pt-br"
+    },
+    {
+      "id": "crt-br116-mage",
+      "name": "Pedágio BR-116 (Magé)",
+      "road": "BR-116",
+      "operator": "CRT — Concessionária Rio-Teresópolis",
+      "lat": -22.6019,
+      "lon": -43.0628,
+      "price_brl": 18.60,
+      "charges": "both_ways",
+      "serves": ["Teresópolis", "Nova Friburgo", "Lumiar"],
+      "confidence": "approximate",
+      "verify_url": "https://www.gov.br/antt/pt-br"
+    },
+    {
+      "id": "riosp-dutra-viuva-graca",
+      "name": "Pedágio Viúva Graça (Via Dutra)",
+      "road": "BR-116 / Via Dutra",
+      "operator": "CCR RioSP",
+      "lat": -22.6167,
+      "lon": -43.8500,
+      "price_brl": 15.20,
+      "charges": "both_ways",
+      "serves": ["Visconde de Mauá", "Penedo", "Itatiaia", "Resende"],
+      "confidence": "approximate",
+      "verify_url": "https://www.gov.br/antt/pt-br"
+    },
+    {
+      "id": "riosp-dutra-itatiaia",
+      "name": "Pedágio Itatiaia (Via Dutra)",
+      "road": "BR-116 / Via Dutra",
+      "operator": "CCR RioSP",
+      "lat": -22.4833,
+      "lon": -44.5667,
+      "price_brl": 12.10,
+      "charges": "both_ways",
+      "serves": ["Visconde de Mauá", "Engenheiro Passos"],
+      "confidence": "approximate",
+      "verify_url": "https://www.gov.br/antt/pt-br"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "_note": "Curated nightly price tiers for a chalé/pousada sleeping two, by town. These exist because Airbnb's robots.txt disallows /s/*/* — the search path — so MATE cannot legally discover live prices. Lodging candidates themselves are real, named places from OpenStreetMap; only the price is a tier. Every figure derived from this file renders with a ~ and the plan says it is a typical rate, not a quote. If the user pastes an actual listing, airbnb_listing_details fetches the real price (that path IS allowed) and it replaces the tier.",
+  "as_of": "2026-09",
+  "currency": "BRL",
+  "basis": "per night, two people, chalé or pousada with kitchen",
+  "tiers": ["low", "medium", "high"],
+  "towns": {
+    "Petrópolis": { "low": 280, "medium": 450, "high": 800 },
+    "Itaipava": { "low": 320, "medium": 520, "high": 950 },
+    "Teresópolis": { "low": 260, "medium": 420, "high": 750 },
+    "Nova Friburgo": { "low": 240, "medium": 400, "high": 700 },
+    "Lumiar": { "low": 260, "medium": 430, "high": 760 },
+    "Visconde de Mauá": { "low": 300, "medium": 500, "high": 900 },
+    "Miguel Pereira": { "low": 250, "medium": 380, "high": 650 },
+    "Secretário": { "low": 240, "medium": 390, "high": 680 }
+  },
+  "default": { "low": 260, "medium": 430, "high": 780 },
+  "per_extra_guest_pct": 0.18
+}

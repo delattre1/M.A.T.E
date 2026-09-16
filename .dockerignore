@@ -1,0 +1,54 @@
+# Build context is the repo root; only the agent's own content belongs in it.
+#
+# A denylist rather than str-hermes-agent's deny-everything-then-allow, and the
+# reason is what this repo holds: no verbatim guest data, no vault, nothing that
+# must never reach a published image. What it does have is an active build
+# window and files landing in it while this is being written, and under an
+# allowlist a new tracked file is invisible to the build until somebody
+# remembers to name it here. This is life-assistant-hermes-agent's shape, with
+# MATE's own entries added. If this repo ever grows a directory of real user
+# data, invert it.
+.git
+.gitignore
+.env
+.env.*
+
+# The live agent token `plow-agents mint` writes beside compose.yml. The build
+# context is this directory, so without this line it is reachable from a COPY.
+plow-credentials
+
+# `**/` is load-bearing: a bare `__pycache__` matches only the context root, and
+# the ones that matter are under mate/ and under every skill's scripts/
+# directory. A stray .pyc can also carry a value compiled before an edit --
+# measured elsewhere, it survived a source revert and kept a test red.
+**/__pycache__
+**/*.py[co]
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+
+# The plan cache Settings.cache_dir writes. A local run leaves fetched Overpass
+# and OSRM responses here; baking one into a layer ships a frozen snapshot of
+# somebody else's query results as if it were the agent's own.
+.cache
+**/.cache
+
+# Local tooling and editor state. None of it is COPY'd, and all of it makes the
+# context bigger and the layer hashes noisier.
+.venv
+venv
+node_modules
+.idea
+.vscode
+.DS_Store
+.claude
+
+# Tests run against the checkout, not inside the image: the image ships the
+# mate package, not its test suite.
+tests
+
+# Documentation. README.md is what a judge reads on GitHub, not something the
+# container needs.
+README.md
+REVIEW.md
+docs

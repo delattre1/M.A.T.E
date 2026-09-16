@@ -1,0 +1,2061 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow">
+<title>MATE</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f6f4ef;
+    --surface: #ffffff;
+    --surface-2: #f0ece4;
+    --ink: #1b1a17;
+    --ink-2: #4a473f;
+    --muted: #757066;
+    --line: #e2ddd2;
+    --line-2: #d3ccbe;
+    --accent: #1d6b4c;
+    --accent-soft: #e6f0ea;
+    --accent-ink: #14513a;
+    --warn-bg: #fbf0e1;
+    --warn-ink: #7f4a11;
+    --warn-line: #ecd4ae;
+    --bad-bg: #fbeae8;
+    --bad-ink: #8c2e23;
+    --bad-line: #eec8c2;
+    --shadow: 0 1px 2px rgba(27,26,23,.05), 0 8px 24px -16px rgba(27,26,23,.25);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121210;
+      --surface: #1a1a17;
+      --surface-2: #222220;
+      --ink: #eceae3;
+      --ink-2: #c6c2b8;
+      --muted: #969085;
+      --line: #2e2d29;
+      --line-2: #3b3a35;
+      --accent: #74cfa4;
+      --accent-soft: #17281f;
+      --accent-ink: #9adcbd;
+      --warn-bg: #2a2114;
+      --warn-ink: #e5b478;
+      --warn-line: #4a3a1f;
+      --bad-bg: #2b1815;
+      --bad-ink: #ef9f95;
+      --bad-line: #4a2620;
+      --shadow: none;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-wrap: break-word;
+  }
+  .wrap {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 4rem;
+  }
+  h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -0.015em; }
+  p { margin: 0; }
+  ul, ol { margin: 0; padding: 0; list-style: none; }
+  a { color: inherit; text-underline-offset: 3px; text-decoration-color: var(--line-2); }
+  a:hover { text-decoration-color: currentColor; }
+  button { font: inherit; color: inherit; }
+
+  .num { font-variant-numeric: tabular-nums; }
+  .kicker {
+    font-size: .6875rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .muted { color: var(--muted); }
+  .small { font-size: .8125rem; }
+  .tiny { font-size: .75rem; }
+
+  /* ---------- masthead ---------- */
+  .mast { margin-bottom: 1.5rem; }
+  .brand {
+    display: flex; align-items: baseline; gap: .5rem;
+    margin-bottom: 1.25rem;
+  }
+  .brand .name {
+    font-size: .8125rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+  }
+  .brand .tag { font-size: .75rem; color: var(--muted); letter-spacing: .02em; }
+  .route {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+  .route .arr { color: var(--muted); font-weight: 400; padding: 0 .1em; }
+  .facts {
+    display: flex; flex-wrap: wrap; gap: .375rem .75rem;
+    margin-top: .75rem; font-size: .9375rem; color: var(--ink-2);
+  }
+  .facts .sep { color: var(--line-2); }
+  .stamp { margin-top: .5rem; }
+
+  /* ---------- generic card ---------- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+  }
+  section { margin-top: 1.5rem; }
+  .sec-head { margin-bottom: .625rem; }
+  .sec-head h2 { font-size: 1.0625rem; }
+  .sec-head .sub { margin-top: .125rem; font-size: .8125rem; color: var(--muted); }
+
+  /* ---------- banners ---------- */
+  .banner {
+    border-radius: var(--radius);
+    padding: .875rem 1rem;
+    border: 1px solid var(--warn-line);
+    background: var(--warn-bg);
+    color: var(--warn-ink);
+  }
+  .banner.bad { border-color: var(--bad-line); background: var(--bad-bg); color: var(--bad-ink); }
+  .banner h2 { font-size: .9375rem; }
+  .banner ul { margin-top: .5rem; display: grid; gap: .5rem; }
+  .banner li { font-size: .8125rem; line-height: 1.45; }
+  .banner .step {
+    font-weight: 600;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .75rem;
+  }
+
+  /* ---------- assumptions ---------- */
+  .assump { border-left: 3px solid var(--accent); }
+  .assump ol { display: grid; gap: .75rem; }
+  .assump li { display: flex; gap: .625rem; align-items: flex-start; }
+  .assump .dot {
+    flex: 0 0 auto; width: .4375rem; height: .4375rem; margin-top: .5rem;
+    border-radius: 50%; background: var(--accent);
+  }
+  .assump .text { font-size: .9375rem; line-height: 1.45; }
+  .assump .key {
+    display: inline-block; margin-top: .1875rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .6875rem; color: var(--muted);
+  }
+  .reply-hint {
+    margin-top: .875rem; padding-top: .75rem; border-top: 1px dashed var(--line-2);
+    font-size: .8125rem; color: var(--ink-2);
+  }
+
+  /* ---------- options ---------- */
+  .tabs { display: grid; gap: .5rem; }
+  @media (min-width: 34rem) { .tabs { grid-template-columns: repeat(3, 1fr); } }
+  .tab {
+    display: block; width: 100%; text-align: left; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: .75rem .875rem; box-shadow: var(--shadow);
+  }
+  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tab[aria-selected="true"] {
+    border-color: var(--accent); background: var(--accent-soft);
+  }
+  .tab .axis { display: block; }
+  .tab .lab { display: block; font-weight: 600; font-size: .9375rem; margin-top: .125rem; line-height: 1.3; }
+  .tab .amt { display: block; margin-top: .375rem; font-size: 1.0625rem; font-weight: 600; letter-spacing: -.01em; }
+  .tab[aria-selected="true"] .amt { color: var(--accent-ink); }
+
+  .panel { margin-top: 1.25rem; }
+  .panel[hidden] { display: none; }
+  .opt-head h2 { font-size: 1.25rem; letter-spacing: -.02em; }
+  .opt-head .why { margin-top: .375rem; color: var(--ink-2); font-size: .9375rem; }
+
+  .lock {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .3125rem .625rem; border-radius: 999px;
+    border: 1px solid var(--accent); color: var(--accent-ink);
+    background: var(--accent-soft);
+    font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  }
+
+  /* ---------- hero total ---------- */
+  .hero { margin-top: 1rem; text-align: left; }
+  .hero .amount {
+    font-size: clamp(2.25rem, 12vw, 3.25rem);
+    line-height: 1; font-weight: 650; letter-spacing: -.035em;
+    display: block; margin-top: .25rem;
+  }
+  .hero .pp { margin-top: .5rem; font-size: .9375rem; color: var(--ink-2); }
+  .fit {
+    display: inline-block; margin-top: .75rem;
+    padding: .3125rem .625rem; border-radius: 999px; font-size: .8125rem; font-weight: 600;
+    border: 1px solid var(--accent); color: var(--accent-ink); background: var(--accent-soft);
+  }
+  .fit.over { border-color: var(--bad-line); color: var(--bad-ink); background: var(--bad-bg); }
+  .fit.none { border-color: var(--line-2); color: var(--muted); background: var(--surface-2); }
+
+  /* ---------- cost rows ---------- */
+  .rows { display: grid; }
+  .row {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+    padding: .5rem 0; border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: 0; }
+  .row .lab { font-size: .9375rem; color: var(--ink-2); }
+  .row .val { font-weight: 600; text-align: right; }
+  .row.total { border-top: 2px solid var(--line-2); border-bottom: 0; margin-top: .25rem; padding-top: .625rem; }
+  .row.total .lab { color: var(--ink); font-weight: 600; }
+
+  /* ---------- provenance ---------- */
+  .fig { white-space: nowrap; }
+  .fig .approx { color: var(--muted); font-weight: 400; padding-right: .1em; }
+  .why-btn {
+    -webkit-appearance: none; appearance: none; cursor: pointer;
+    margin-left: .3125rem; padding: 0 .375rem;
+    min-width: 1.375rem; height: 1.375rem; line-height: 1.25rem;
+    border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface-2);
+    color: var(--muted); font-size: .6875rem; font-weight: 700; letter-spacing: .04em;
+    vertical-align: .05em;
+  }
+  .why-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .why-btn[aria-expanded="true"] { border-color: var(--accent); color: var(--accent-ink); background: var(--accent-soft); }
+  .note {
+    display: block; white-space: normal;
+    margin: .4375rem 0 .125rem; padding: .5rem .625rem;
+    border-left: 2px solid var(--line-2); background: var(--surface-2);
+    border-radius: 0 8px 8px 0;
+    font-size: .75rem; line-height: 1.45; color: var(--ink-2); font-weight: 400;
+    text-align: left;
+  }
+  .note[hidden] { display: none; }
+  .note .src { font-weight: 600; color: var(--ink); }
+  .soft-tag { font-size: .75rem; color: var(--muted); font-style: italic; }
+  .soft-tag .why-btn { font-style: normal; }
+
+  /* ---------- base / travel_to ---------- */
+  .block { margin-top: 1rem; }
+  .block > .kicker { display: block; margin-bottom: .5rem; }
+  .base-name { font-size: 1.0625rem; font-weight: 600; letter-spacing: -.01em; }
+  .meta { display: flex; flex-wrap: wrap; gap: .25rem .625rem; margin-top: .375rem; font-size: .8125rem; color: var(--muted); }
+  .tolls { margin-top: .625rem; display: grid; gap: .375rem; }
+  .toll { display: flex; justify-content: space-between; gap: .75rem; font-size: .8125rem; }
+  .toll .tname { color: var(--ink-2); }
+
+  /* ---------- days ---------- */
+  .day { margin-top: 1rem; }
+  .day-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; margin-bottom: .5rem; }
+  .day-head h3 { font-size: 1.0625rem; }
+  .badge {
+    display: inline-block; padding: .1875rem .5rem; border-radius: 999px;
+    border: 1px solid var(--line-2); background: var(--surface-2);
+    font-size: .6875rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-2); white-space: nowrap;
+  }
+  .badge.foot { border-color: var(--accent); color: var(--accent-ink); background: var(--accent-soft); }
+  .reason { font-size: .875rem; color: var(--ink-2); margin-bottom: .75rem; }
+  .daystats { display: flex; flex-wrap: wrap; gap: .25rem .75rem; font-size: .8125rem; color: var(--muted); margin-bottom: .75rem; }
+
+  .walk { margin: .75rem 0; padding: .625rem .75rem; border-radius: 10px; background: var(--surface-2); }
+  .walk .top { display: flex; justify-content: space-between; gap: .75rem; font-size: .8125rem; }
+  .walk .bar { margin-top: .4375rem; height: 5px; border-radius: 999px; background: var(--line); overflow: hidden; }
+  .walk .bar i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+  .walk.warn { background: var(--warn-bg); color: var(--warn-ink); }
+  .walk.warn .bar { background: var(--warn-line); }
+  .walk.warn .bar i { background: currentColor; }
+  .walk .msg { margin-top: .4375rem; font-size: .75rem; line-height: 1.4; }
+
+  .stop { display: flex; gap: .75rem; padding: .625rem 0; }
+  .stop .when {
+    flex: 0 0 3.5rem; font-size: .8125rem; line-height: 1.35; color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .stop .when .dep { color: var(--muted); }
+  .stop .body { min-width: 0; flex: 1 1 auto; }
+  .stop .nm { font-weight: 600; font-size: .9375rem; line-height: 1.35; overflow-wrap: anywhere; }
+  .stop .desc { margin-top: .25rem; font-size: .875rem; color: var(--ink-2); line-height: 1.45; }
+  .stop .tags { display: flex; flex-wrap: wrap; gap: .25rem .5rem; margin-top: .375rem; font-size: .75rem; color: var(--muted); }
+  .stop .tags .k {
+    border: 1px solid var(--line); border-radius: 999px; padding: .0625rem .4375rem;
+  }
+  .leg {
+    display: flex; gap: .75rem; align-items: center;
+    font-size: .75rem; color: var(--muted);
+  }
+  .leg .rail { flex: 0 0 3.5rem; display: flex; justify-content: center; }
+  .leg .rail span { display: block; width: 1px; height: 1.375rem; background: var(--line-2); }
+  .leg .txt { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .5rem; }
+  .notes { margin-top: .625rem; display: grid; gap: .375rem; }
+  .notes li { font-size: .8125rem; color: var(--ink-2); padding-left: .875rem; position: relative; line-height: 1.45; }
+  .notes li::before { content: ""; position: absolute; left: 0; top: .5rem; width: .375rem; height: 1px; background: var(--line-2); }
+
+  /* ---------- constraints ---------- */
+  .cons { display: grid; gap: .625rem; }
+  .cons li { display: flex; gap: .625rem; align-items: flex-start; }
+  .cons .kind {
+    flex: 0 0 auto; margin-top: .0625rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .6875rem; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 6px; padding: .0625rem .3125rem;
+  }
+  .cons .ctext { font-size: .9375rem; line-height: 1.45; }
+
+  .empty { color: var(--muted); font-size: .875rem; }
+
+  /* ---------- footer ---------- */
+  footer { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+  .legend { display: grid; gap: .5rem; margin-top: .625rem; }
+  .legend li { font-size: .75rem; color: var(--muted); line-height: 1.45; }
+  .legend b { color: var(--ink-2); font-weight: 600; }
+  .langbar { margin-top: 1rem; }
+  .langbtn {
+    -webkit-appearance: none; appearance: none; cursor: pointer;
+    background: none; border: 0; padding: .25rem 0;
+    font-size: .75rem; color: var(--muted); text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .langbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- failure fallback ---------- */
+  .fallback { border: 1px solid var(--bad-line); background: var(--bad-bg); color: var(--bad-ink); border-radius: var(--radius); padding: 1rem; }
+  .fallback h1 { font-size: 1.125rem; }
+  .fallback p { margin-top: .5rem; font-size: .875rem; line-height: 1.5; }
+  .fallback pre {
+    margin: .75rem 0 0; padding: .625rem; overflow-x: auto;
+    background: var(--surface); border-radius: 8px; color: var(--ink-2);
+    font-size: .6875rem; white-space: pre-wrap; word-break: break-word;
+  }
+
+  @media print {
+    :root {
+      --bg: #fff; --surface: #fff; --surface-2: #fff;
+      --ink: #000; --ink-2: #222; --muted: #555;
+      --line: #ccc; --line-2: #999;
+      --accent: #000; --accent-ink: #000; --accent-soft: #fff;
+      --warn-bg: #fff; --warn-ink: #000; --warn-line: #999;
+      --bad-bg: #fff; --bad-ink: #000; --bad-line: #999;
+      --shadow: none;
+    }
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .wrap { max-width: none; padding: 0; }
+    .card, .tab, .banner { break-inside: avoid; }
+    .why-btn, .langbar { display: none !important; }
+    .note[hidden] { display: block !important; }
+    .day, .stop, .hero, .rows { break-inside: avoid; }
+    section { margin-top: 1rem; }
+    a { text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<main id="app" class="wrap" aria-live="polite"></main>
+<noscript><div class="wrap"><div class="fallback"><h1>MATE</h1><p>Este plano precisa de JavaScript para abrir. Ative-o e recarregue. / This plan needs JavaScript. Enable it and reload.</p></div></div></noscript>
+
+<script type="application/json" id="plan">
+{
+  "version": 1,
+  "lang": "pt-BR",
+  "created_at": "2026-09-16T11:04:52+00:00",
+  "updated_at": "2026-09-16T13:42:07+00:00",
+  "intake": {
+    "origin": "Rio de Janeiro",
+    "region": "Petrópolis",
+    "start_date": "2026-10-31",
+    "end_date": "2026-11-01",
+    "party_size": 2,
+    "budget_total_brl": 2000.0,
+    "origin_coord": { "lat": -22.9068, "lon": -43.1729 }
+  },
+  "assumptions": [
+    { "key": "vehicle", "value": "own_car", "text": "Vocês vão de carro próprio, saindo do Rio. Combustível e pedágio já estão na conta." },
+    { "key": "pace", "value": "moderate", "text": "Ritmo tranquilo: três a quatro paradas por dia, com almoço sentado." },
+    { "key": "lodging_share", "value": "one_room", "text": "As duas pessoas dividem um quarto só." },
+    { "key": "check_in", "value": "14:00", "text": "Check-in só depois das 14h — o sábado começa pelo centro, com as malas no carro." }
+  ],
+  "constraints": [
+    { "id": "c-budget", "text": "Teto de R$ 2.000 no total da viagem, não por noite.", "kind": "budget", "value": "2000", "added_at": "2026-09-16T11:06:31+00:00" },
+    { "id": "c-knee", "text": "Nada de trilha pesada: a Ana está com o joelho ruim.", "kind": "exclude", "value": "hiking", "added_at": "2026-09-16T12:15:09+00:00" },
+    { "id": "c-drive", "text": "No máximo 2 h de estrada em cada sentido.", "kind": "max_drive_min", "value": "120", "added_at": "2026-09-16T12:15:44+00:00" },
+    { "id": "c-museu", "text": "O Museu Imperial é obrigatório.", "kind": "include", "value": "Museu Imperial", "added_at": "2026-09-16T13:41:58+00:00" }
+  ],
+  "selected_option_id": "",
+  "diagnostics": [
+    { "step": "geocode", "status": "ok", "detail": "Rio de Janeiro e Petrópolis resolvidos no Photon.", "at": "2026-09-16T13:41:12+00:00" },
+    { "step": "pois", "status": "ok", "detail": "34 pontos vieram do Overpass num raio de 25 km; 11 entraram no plano.", "at": "2026-09-16T13:41:29+00:00" },
+    { "step": "route_car", "status": "ok", "detail": "OSRM (perfil carro) respondeu para os 9 trechos de estrada.", "at": "2026-09-16T13:41:40+00:00" },
+    { "step": "route_foot", "status": "degraded", "detail": "OSRM a pé fora do ar. Os trechos a pé viraram linha reta × 1,30 a 4,8 km/h — as distâncias do centro histórico são aproximação, não medição.", "at": "2026-09-16T13:41:47+00:00" },
+    { "step": "lodging", "status": "degraded", "detail": "Só 3 anúncios com as datas livres no feriado de Finados. O preço da opção 'Seis paradas por dia' é a mediana da região, não um anúncio reservável.", "at": "2026-09-16T13:42:01+00:00" },
+    { "step": "tolls", "status": "ok", "detail": "Tabela de pedágios da BR-040 mantida à mão, revisada em 20/08/2026.", "at": "2026-09-16T13:42:05+00:00" }
+  ],
+  "options": [
+    {
+      "id": "opt-cheapest",
+      "label": "Quarto simples no centro histórico",
+      "axis": "cheapest",
+      "why": "A base mais barata com as datas livres, a 400 m do Museu Imperial. Sábado inteiro a pé, domingo de carro pela serra.",
+      "base": {
+        "id": "abnb-8841203",
+        "name": "Quarto na Casa Amarela — Centro Histórico",
+        "city": "Petrópolis",
+        "lat": -22.5071,
+        "lon": -43.1812,
+        "price_per_night_brl": 420.0,
+        "total_price_brl": 420.0,
+        "url": "https://www.airbnb.com.br/rooms/8841203",
+        "rating": 4.81,
+        "capacity": 2,
+        "has_kitchen": true,
+        "provenance": { "source": "measured", "detail": "Anúncio do Airbnb com as datas de 31/10 a 01/11 livres no momento da consulta.", "as_of": "2026-09-16" }
+      },
+      "travel_to": {
+        "mode": "car",
+        "distance_km": 136.8,
+        "duration_min": 164.0,
+        "fuel_cost_brl": 77.1,
+        "toll_cost_brl": 21.8,
+        "tolls": [
+          { "name": "Praça de Pedágio de Xerém", "price_brl": 10.9, "road": "BR-040", "operator": "Concer", "verify_url": "https://www.concer.com.br/tarifas" }
+        ],
+        "total_cost_brl": 98.9,
+        "round_trip": true,
+        "liters": 12.44,
+        "provenance": { "source": "measured", "detail": "OSRM (carro) pela BR-040, ida e volta; combustível a R$ 6,20/L e 11 km/L; pedágio da tabela curada.", "as_of": "2026-09-16" }
+      },
+      "days": [
+        {
+          "date": "2026-10-31",
+          "travel_within": "foot",
+          "mode_reason": "As quatro paradas cabem num raio de 1,2 km — dá para fazer o sábado inteiro a pé, sem tirar o carro.",
+          "spread_km": 1.2,
+          "stops": [
+            {
+              "id": "s-museu-imperial", "name": "Museu Imperial", "lat": -22.5062, "lon": -43.1786,
+              "kind": "sight", "category": "museum",
+              "description": "A casa de verão de D. Pedro II, com a coroa imperial na última sala. Entra-se de pantufa sobre o assoalho original.",
+              "dwell_min": 90, "arrive": "11:00", "depart": "12:30",
+              "opening_hours": "Ter–Dom 11:00–17:00", "url": "https://museuimperial.museus.gov.br/",
+              "osm_id": "way/44519281", "wikidata_id": "Q10322085", "score": 0.94,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/44519281); horário da tag opening_hours.", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-majorica", "name": "Restaurante Majórica", "lat": -22.5083, "lon": -43.1826,
+              "kind": "meal", "category": "restaurant",
+              "description": "Churrascaria de 1961 a três quarteirões do museu. Almoço sentado, sem fila antes das 13h.",
+              "dwell_min": 75, "arrive": "12:40", "depart": "13:55",
+              "opening_hours": "Todos os dias 11:30–23:00", "url": "",
+              "osm_id": "node/3391118742", "wikidata_id": "", "score": 0.71,
+              "provenance": { "source": "curated", "detail": "Ficha revisada à mão em data/petropolis.yml; o OSM não traz faixa de preço para este ponto.", "as_of": "2026-08-20" }
+            },
+            {
+              "id": "s-catedral", "name": "Catedral São Pedro de Alcântara", "lat": -22.5046, "lon": -43.1789,
+              "kind": "sight", "category": "cathedral",
+              "description": "Neogótica, com o mausoléu imperial na nave lateral. A subida à torre fecha quando chove.",
+              "dwell_min": 45, "arrive": "14:05", "depart": "14:50",
+              "opening_hours": "Ter–Dom 08:00–18:00", "url": "",
+              "osm_id": "way/152997341", "wikidata_id": "Q3662131", "score": 0.83,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/152997341).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-cristal", "name": "Palácio de Cristal", "lat": -22.5088, "lon": -43.1841,
+              "kind": "sight", "category": "attraction",
+              "description": "Estufa de ferro e vidro montada na França em 1884, hoje no meio de um jardim aberto.",
+              "dwell_min": 50, "arrive": "15:00", "depart": "15:50",
+              "opening_hours": "Ter–Dom 09:00–18:00", "url": "",
+              "osm_id": "way/242551098", "wikidata_id": "Q10333356", "score": 0.79,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/242551098).", "as_of": "2026-09-16" }
+            }
+          ],
+          "legs": [
+            { "from_id": "s-museu-imperial", "to_id": "s-majorica", "mode": "foot", "distance_km": 0.4, "duration_min": 6.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } },
+            { "from_id": "s-majorica", "to_id": "s-catedral", "mode": "foot", "distance_km": 0.6, "duration_min": 8.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } },
+            { "from_id": "s-catedral", "to_id": "s-cristal", "mode": "foot", "distance_km": 0.6, "duration_min": 8.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } }
+          ],
+          "distance_km": 1.6,
+          "travel_duration_min": 22.0,
+          "walking_km": 2.4,
+          "travel_cost_brl": 0.0,
+          "notes": [
+            "Saindo do Rio às 9h, vocês chegam ao centro por volta das 10h40 — dá tempo de estacionar antes do museu abrir.",
+            "Estacionamento pago na Rua da Imperatriz, cerca de R$ 15 a diária. Não está na conta abaixo."
+          ]
+        },
+        {
+          "date": "2026-11-01",
+          "travel_within": "car",
+          "mode_reason": "Quitandinha, Itaipava e a cachoeira ficam espalhados em 16 km de serra — sem carro, o domingo não fecha.",
+          "spread_km": 16.4,
+          "stops": [
+            {
+              "id": "s-quitandinha", "name": "Palácio Quitandinha", "lat": -22.5335, "lon": -43.2026,
+              "kind": "sight", "category": "attraction",
+              "description": "Cassino de 1944 que nunca chegou a funcionar como cassino. O salão principal ainda tem o lustre original.",
+              "dwell_min": 75, "arrive": "11:30", "depart": "12:45",
+              "opening_hours": "Ter–Dom 09:00–17:00", "url": "",
+              "osm_id": "way/104822741", "wikidata_id": "Q10333395", "score": 0.88,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/104822741).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-bauernstube", "name": "Bauernstube Itaipava", "lat": -22.429, "lon": -43.1358,
+              "kind": "meal", "category": "restaurant",
+              "description": "Cozinha alemã na estrada de Itaipava. Eisbein e chope escuro; a fila de domingo some depois das 14h.",
+              "dwell_min": 75, "arrive": "13:15", "depart": "14:30",
+              "opening_hours": "Qua–Dom 12:00–22:00", "url": "",
+              "osm_id": "node/4410992381", "wikidata_id": "", "score": 0.68,
+              "provenance": { "source": "curated", "detail": "Ficha revisada à mão em data/petropolis.yml.", "as_of": "2026-08-20" }
+            },
+            {
+              "id": "s-veu-noiva", "name": "Cachoeira Véu da Noiva", "lat": -22.4448, "lon": -43.1105,
+              "kind": "sight", "category": "waterfall",
+              "description": "Queda de 30 m visível do mirante, a 200 m do estacionamento — sem trilha, por causa do joelho.",
+              "dwell_min": 75, "arrive": "14:45", "depart": "16:00",
+              "opening_hours": "Todos os dias 08:00–17:00", "url": "",
+              "osm_id": "node/2211840963", "wikidata_id": "", "score": 0.76,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (node/2211840963).", "as_of": "2026-09-16" }
+            }
+          ],
+          "legs": [
+            { "from_id": "s-quitandinha", "to_id": "s-bauernstube", "mode": "car", "distance_km": 16.4, "duration_min": 27.0, "cost_brl": 9.24,
+              "provenance": { "source": "measured", "detail": "OSRM (carro); combustível a R$ 6,20/L e 11 km/L.", "as_of": "2026-09-16" } },
+            { "from_id": "s-bauernstube", "to_id": "s-veu-noiva", "mode": "car", "distance_km": 6.4, "duration_min": 13.0, "cost_brl": 3.6,
+              "provenance": { "source": "measured", "detail": "OSRM (carro); combustível a R$ 6,20/L e 11 km/L.", "as_of": "2026-09-16" } }
+          ],
+          "distance_km": 22.8,
+          "travel_duration_min": 40.0,
+          "walking_km": 1.1,
+          "travel_cost_brl": 12.84,
+          "notes": [
+            "Check-out às 11h; o Quitandinha já fica no caminho de saída.",
+            "Da cachoeira, a volta para o Rio é pela BR-040 — cerca de 1 h 25 min."
+          ]
+        }
+      ],
+      "costs": {
+        "lodging_brl": 420.0,
+        "travel_to_brl": 98.9,
+        "travel_within_brl": 12.84,
+        "food_brl": 360.0,
+        "total_brl": 891.74,
+        "per_person_brl": 445.87,
+        "budget_brl": 2000.0,
+        "within_budget": true,
+        "estimated_items": ["food_brl"]
+      },
+      "total_travel_min": 226.0,
+      "stop_count": 7
+    },
+    {
+      "id": "opt-least-travel",
+      "label": "Fim de semana sem pegar o carro",
+      "axis": "least_travel",
+      "why": "Base na Avenida Koeler: o carro fica parado os dois dias, e o único deslocamento pago é a corrida até o Quitandinha.",
+      "base": {
+        "id": "abnb-5520914",
+        "name": "Casablanca Center — quarto duplo",
+        "city": "Petrópolis",
+        "lat": -22.5055,
+        "lon": -43.1797,
+        "price_per_night_brl": 680.0,
+        "total_price_brl": 680.0,
+        "url": "https://www.airbnb.com.br/rooms/5520914",
+        "rating": 4.62,
+        "capacity": 3,
+        "has_kitchen": false,
+        "provenance": { "source": "measured", "detail": "Anúncio do Airbnb com as datas de 31/10 a 01/11 livres no momento da consulta.", "as_of": "2026-09-16" }
+      },
+      "travel_to": {
+        "mode": "car",
+        "distance_km": 136.8,
+        "duration_min": 164.0,
+        "fuel_cost_brl": 77.1,
+        "toll_cost_brl": 21.8,
+        "tolls": [
+          { "name": "Praça de Pedágio de Xerém", "price_brl": 10.9, "road": "BR-040", "operator": "Concer", "verify_url": "https://www.concer.com.br/tarifas" }
+        ],
+        "total_cost_brl": 98.9,
+        "round_trip": true,
+        "liters": 12.44,
+        "provenance": { "source": "measured", "detail": "OSRM (carro) pela BR-040, ida e volta; combustível a R$ 6,20/L e 11 km/L; pedágio da tabela curada.", "as_of": "2026-09-16" }
+      },
+      "days": [
+        {
+          "date": "2026-10-31",
+          "travel_within": "foot",
+          "mode_reason": "Tudo dentro de 1,1 km da pousada — o sábado sai inteiro a pé.",
+          "spread_km": 1.1,
+          "stops": [
+            {
+              "id": "s-museu-imperial", "name": "Museu Imperial", "lat": -22.5062, "lon": -43.1786,
+              "kind": "sight", "category": "museum",
+              "description": "A casa de verão de D. Pedro II, com a coroa imperial na última sala.",
+              "dwell_min": 90, "arrive": "11:00", "depart": "12:30",
+              "opening_hours": "Ter–Dom 11:00–17:00", "url": "https://museuimperial.museus.gov.br/",
+              "osm_id": "way/44519281", "wikidata_id": "Q10322085", "score": 0.94,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/44519281).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-majorica", "name": "Restaurante Majórica", "lat": -22.5083, "lon": -43.1826,
+              "kind": "meal", "category": "restaurant",
+              "description": "Churrascaria de 1961, almoço sentado a quatro quarteirões da pousada.",
+              "dwell_min": 75, "arrive": "12:40", "depart": "13:55",
+              "opening_hours": "Todos os dias 11:30–23:00", "url": "",
+              "osm_id": "node/3391118742", "wikidata_id": "", "score": 0.71,
+              "provenance": { "source": "curated", "detail": "Ficha revisada à mão em data/petropolis.yml.", "as_of": "2026-08-20" }
+            },
+            {
+              "id": "s-catedral", "name": "Catedral São Pedro de Alcântara", "lat": -22.5046, "lon": -43.1789,
+              "kind": "sight", "category": "cathedral",
+              "description": "Neogótica, com o mausoléu imperial na nave lateral.",
+              "dwell_min": 45, "arrive": "14:05", "depart": "14:50",
+              "opening_hours": "Ter–Dom 08:00–18:00", "url": "",
+              "osm_id": "way/152997341", "wikidata_id": "Q3662131", "score": 0.83,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/152997341).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-cristal", "name": "Palácio de Cristal", "lat": -22.5088, "lon": -43.1841,
+              "kind": "sight", "category": "attraction",
+              "description": "Estufa de ferro e vidro de 1884, num jardim aberto ao público.",
+              "dwell_min": 50, "arrive": "15:05", "depart": "15:55",
+              "opening_hours": "Ter–Dom 09:00–18:00", "url": "",
+              "osm_id": "way/242551098", "wikidata_id": "Q10333356", "score": 0.79,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/242551098).", "as_of": "2026-09-16" }
+            }
+          ],
+          "legs": [
+            { "from_id": "s-museu-imperial", "to_id": "s-majorica", "mode": "foot", "distance_km": 0.4, "duration_min": 6.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } },
+            { "from_id": "s-majorica", "to_id": "s-catedral", "mode": "foot", "distance_km": 0.6, "duration_min": 8.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } },
+            { "from_id": "s-catedral", "to_id": "s-cristal", "mode": "foot", "distance_km": 0.6, "duration_min": 7.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } }
+          ],
+          "distance_km": 1.6,
+          "travel_duration_min": 21.0,
+          "walking_km": 2.2,
+          "travel_cost_brl": 0.0,
+          "notes": [
+            "O carro pode ficar na pousada desde a chegada — nenhuma parada de sábado precisa dele."
+          ]
+        },
+        {
+          "date": "2026-11-01",
+          "travel_within": "ridehail",
+          "mode_reason": "Só o Quitandinha fica longe (4,1 km). Uma corrida de app ida e volta sai mais barata do que tirar o carro da vaga.",
+          "spread_km": 4.1,
+          "stops": [
+            {
+              "id": "s-santos-dumont", "name": "Casa de Santos Dumont", "lat": -22.5104, "lon": -43.1818,
+              "kind": "sight", "category": "museum",
+              "description": "A casa de degraus altos que o inventor projetou sem cozinha. Dez minutos a pé da pousada.",
+              "dwell_min": 60, "arrive": "09:30", "depart": "10:30",
+              "opening_hours": "Ter–Dom 09:30–17:00", "url": "",
+              "osm_id": "way/104822655", "wikidata_id": "Q3661954", "score": 0.86,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/104822655).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-bohemia", "name": "Cervejaria Bohemia", "lat": -22.5075, "lon": -43.1795,
+              "kind": "meal", "category": "brewery",
+              "description": "Visita guiada e almoço no mesmo prédio, na primeira cervejaria do país.",
+              "dwell_min": 105, "arrive": "10:45", "depart": "12:30",
+              "opening_hours": "Qua–Dom 11:00–19:00", "url": "https://www.ambevexperience.com.br/",
+              "osm_id": "way/380127441", "wikidata_id": "", "score": 0.81,
+              "provenance": { "source": "curated", "detail": "Horário e ingresso conferidos à mão em data/petropolis.yml.", "as_of": "2026-08-20" }
+            },
+            {
+              "id": "s-quitandinha", "name": "Palácio Quitandinha", "lat": -22.5335, "lon": -43.2026,
+              "kind": "sight", "category": "attraction",
+              "description": "Cassino de 1944 que nunca abriu como cassino; o salão principal ainda tem o lustre original.",
+              "dwell_min": 75, "arrive": "12:50", "depart": "14:05",
+              "opening_hours": "Ter–Dom 09:00–17:00", "url": "",
+              "osm_id": "way/104822741", "wikidata_id": "Q10333395", "score": 0.88,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/104822741).", "as_of": "2026-09-16" }
+            }
+          ],
+          "legs": [
+            { "from_id": "s-santos-dumont", "to_id": "s-bohemia", "mode": "foot", "distance_km": 0.9, "duration_min": 12.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } },
+            { "from_id": "s-bohemia", "to_id": "s-quitandinha", "mode": "ridehail", "distance_km": 4.1, "duration_min": 11.0, "cost_brl": 16.34,
+              "provenance": { "source": "estimated", "detail": "Fórmula nossa: R$ 6,50 de bandeirada + R$ 2,40/km, mínimo de R$ 9,00. Nenhum app foi consultado.", "as_of": "2026-09-16" } }
+          ],
+          "distance_km": 5.0,
+          "travel_duration_min": 23.0,
+          "walking_km": 2.3,
+          "travel_cost_brl": 16.34,
+          "notes": [
+            "A volta do Quitandinha é de carro, já a caminho da BR-040 — não entra na corrida de app."
+          ]
+        }
+      ],
+      "costs": {
+        "lodging_brl": 680.0,
+        "travel_to_brl": 98.9,
+        "travel_within_brl": 16.34,
+        "food_brl": 360.0,
+        "total_brl": 1155.24,
+        "per_person_brl": 577.62,
+        "budget_brl": 2000.0,
+        "within_budget": true,
+        "estimated_items": ["food_brl", "travel_within_brl"]
+      },
+      "total_travel_min": 208.0,
+      "stop_count": 7
+    },
+    {
+      "id": "opt-most-to-see",
+      "label": "Seis paradas no sábado",
+      "axis": "most_to_see",
+      "why": "O roteiro mais cheio: onze paradas em dois dias, com base em Itaipava para encurtar o domingo. É o único que estoura o teto — e o sábado tem 9,4 km a pé.",
+      "base": {
+        "id": "abnb-7712088",
+        "name": "Pousada Vale Florido — chalé para dois",
+        "city": "Itaipava, Petrópolis",
+        "lat": -22.4301,
+        "lon": -43.1402,
+        "price_per_night_brl": 1580.0,
+        "total_price_brl": 1580.0,
+        "url": "https://www.airbnb.com.br/rooms/7712088",
+        "rating": 4.93,
+        "capacity": 2,
+        "has_kitchen": true,
+        "provenance": { "source": "estimated", "detail": "Mediana de 3 anúncios em Itaipava para o feriado de Finados. O anúncio exato não estava reservável na hora da consulta — confirme antes de contar com este preço.", "as_of": "2026-09-16" }
+      },
+      "travel_to": {
+        "mode": "car",
+        "distance_km": 156.2,
+        "duration_min": 190.0,
+        "fuel_cost_brl": 88.04,
+        "toll_cost_brl": 21.8,
+        "tolls": [
+          { "name": "Praça de Pedágio de Xerém", "price_brl": 10.9, "road": "BR-040", "operator": "Concer", "verify_url": "https://www.concer.com.br/tarifas" }
+        ],
+        "total_cost_brl": 109.84,
+        "round_trip": true,
+        "liters": 14.2,
+        "provenance": { "source": "measured", "detail": "OSRM (carro) pela BR-040 até Itaipava, ida e volta; combustível a R$ 6,20/L e 11 km/L; pedágio da tabela curada.", "as_of": "2026-09-16" }
+      },
+      "days": [
+        {
+          "date": "2026-10-31",
+          "travel_within": "foot",
+          "mode_reason": "As seis paradas cabem em 4,2 km, então o dia é a pé — mas somam 9,4 km de caminhada, com ladeira no fim.",
+          "spread_km": 4.2,
+          "stops": [
+            {
+              "id": "s-museu-imperial", "name": "Museu Imperial", "lat": -22.5062, "lon": -43.1786,
+              "kind": "sight", "category": "museum",
+              "description": "A casa de verão de D. Pedro II, com a coroa imperial na última sala.",
+              "dwell_min": 80, "arrive": "11:00", "depart": "12:20",
+              "opening_hours": "Ter–Dom 11:00–17:00", "url": "https://museuimperial.museus.gov.br/",
+              "osm_id": "way/44519281", "wikidata_id": "Q10322085", "score": 0.94,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/44519281).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-majorica", "name": "Restaurante Majórica", "lat": -22.5083, "lon": -43.1826,
+              "kind": "meal", "category": "restaurant",
+              "description": "Churrascaria de 1961; almoço rápido, porque o dia é longo.",
+              "dwell_min": 75, "arrive": "12:30", "depart": "13:45",
+              "opening_hours": "Todos os dias 11:30–23:00", "url": "",
+              "osm_id": "node/3391118742", "wikidata_id": "", "score": 0.71,
+              "provenance": { "source": "curated", "detail": "Ficha revisada à mão em data/petropolis.yml.", "as_of": "2026-08-20" }
+            },
+            {
+              "id": "s-catedral", "name": "Catedral São Pedro de Alcântara", "lat": -22.5046, "lon": -43.1789,
+              "kind": "sight", "category": "cathedral",
+              "description": "Neogótica, com o mausoléu imperial na nave lateral.",
+              "dwell_min": 45, "arrive": "14:00", "depart": "14:45",
+              "opening_hours": "Ter–Dom 08:00–18:00", "url": "",
+              "osm_id": "way/152997341", "wikidata_id": "Q3662131", "score": 0.83,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/152997341).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-cristal", "name": "Palácio de Cristal", "lat": -22.5088, "lon": -43.1841,
+              "kind": "sight", "category": "attraction",
+              "description": "Estufa de ferro e vidro de 1884, num jardim aberto ao público.",
+              "dwell_min": 50, "arrive": "15:00", "depart": "15:50",
+              "opening_hours": "Ter–Dom 09:00–18:00", "url": "",
+              "osm_id": "way/242551098", "wikidata_id": "Q10333356", "score": 0.79,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/242551098).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-santos-dumont", "name": "Casa de Santos Dumont", "lat": -22.5104, "lon": -43.1818,
+              "kind": "sight", "category": "museum",
+              "description": "A casa de degraus altos que o inventor projetou sem cozinha.",
+              "dwell_min": 50, "arrive": "16:15", "depart": "17:05",
+              "opening_hours": "Ter–Dom 09:30–17:00", "url": "",
+              "osm_id": "way/104822655", "wikidata_id": "Q3661954", "score": 0.86,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/104822655).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-trono-fatima", "name": "Trono de Fátima", "lat": -22.514, "lon": -43.1729,
+              "kind": "sight", "category": "viewpoint",
+              "description": "Mirante com a cidade inteira embaixo. A subida a pé é a parte mais puxada do dia.",
+              "dwell_min": 45, "arrive": "17:45", "depart": "18:30",
+              "opening_hours": "Todos os dias 08:00–19:00", "url": "",
+              "osm_id": "node/4988115502", "wikidata_id": "", "score": 0.64,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (node/4988115502).", "as_of": "2026-09-16" }
+            }
+          ],
+          "legs": [
+            { "from_id": "s-museu-imperial", "to_id": "s-majorica", "mode": "foot", "distance_km": 0.4, "duration_min": 6.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } },
+            { "from_id": "s-majorica", "to_id": "s-catedral", "mode": "foot", "distance_km": 1.1, "duration_min": 14.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } },
+            { "from_id": "s-catedral", "to_id": "s-cristal", "mode": "foot", "distance_km": 0.9, "duration_min": 12.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } },
+            { "from_id": "s-cristal", "to_id": "s-santos-dumont", "mode": "foot", "distance_km": 1.7, "duration_min": 22.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30, caminhando a 4,8 km/h.", "as_of": "2026-09-16" } },
+            { "from_id": "s-santos-dumont", "to_id": "s-trono-fatima", "mode": "foot", "distance_km": 2.8, "duration_min": 36.0, "cost_brl": 0.0,
+              "provenance": { "source": "estimated", "detail": "OSRM a pé indisponível: linha reta × 1,30 e sem contar a ladeira — na prática, mais do que 36 min.", "as_of": "2026-09-16" } }
+          ],
+          "distance_km": 6.9,
+          "travel_duration_min": 90.0,
+          "walking_km": 9.4,
+          "travel_cost_brl": 0.0,
+          "notes": [
+            "Seis paradas num dia só. Se cansar, corte o Trono de Fátima: é a subida mais puxada e a última.",
+            "O chalé fica em Itaipava, a 20 min de carro do centro — a volta é depois das 18h30."
+          ]
+        },
+        {
+          "date": "2026-11-01",
+          "travel_within": "car",
+          "mode_reason": "Quatro trechos de serra, 44 km no total: é dia de carro do começo ao fim.",
+          "spread_km": 18.9,
+          "stops": [
+            {
+              "id": "s-quitandinha", "name": "Palácio Quitandinha", "lat": -22.5335, "lon": -43.2026,
+              "kind": "sight", "category": "attraction",
+              "description": "Cassino de 1944 que nunca abriu como cassino; o lago em frente tem a forma do Brasil.",
+              "dwell_min": 70, "arrive": "09:00", "depart": "10:10",
+              "opening_hours": "Ter–Dom 09:00–17:00", "url": "",
+              "osm_id": "way/104822741", "wikidata_id": "Q10333395", "score": 0.88,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/104822741).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-parnaso", "name": "PARNASO — sede Petrópolis", "lat": -22.4599, "lon": -43.2578,
+              "kind": "sight", "category": "national_park",
+              "description": "Entrada do Parque Nacional da Serra dos Órgãos. Só o mirante e a piscina natural, sem trilha longa.",
+              "dwell_min": 80, "arrive": "10:35", "depart": "11:55",
+              "opening_hours": "Todos os dias 08:00–17:00", "url": "https://www.icmbio.gov.br/parnaserradosorgaos/",
+              "osm_id": "way/29844121", "wikidata_id": "Q2072877", "score": 0.85,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (way/29844121).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-bauernstube", "name": "Bauernstube Itaipava", "lat": -22.429, "lon": -43.1358,
+              "kind": "meal", "category": "restaurant",
+              "description": "Cozinha alemã na estrada de Itaipava, a 5 min da pousada.",
+              "dwell_min": 75, "arrive": "12:15", "depart": "13:30",
+              "opening_hours": "Qua–Dom 12:00–22:00", "url": "",
+              "osm_id": "node/4410992381", "wikidata_id": "", "score": 0.68,
+              "provenance": { "source": "curated", "detail": "Ficha revisada à mão em data/petropolis.yml.", "as_of": "2026-08-20" }
+            },
+            {
+              "id": "s-veu-noiva", "name": "Cachoeira Véu da Noiva", "lat": -22.4448, "lon": -43.1105,
+              "kind": "sight", "category": "waterfall",
+              "description": "Queda de 30 m vista do mirante, a 200 m do estacionamento.",
+              "dwell_min": 60, "arrive": "13:45", "depart": "14:45",
+              "opening_hours": "Todos os dias 08:00–17:00", "url": "",
+              "osm_id": "node/2211840963", "wikidata_id": "", "score": 0.76,
+              "provenance": { "source": "measured", "detail": "OpenStreetMap via Overpass (node/2211840963).", "as_of": "2026-09-16" }
+            },
+            {
+              "id": "s-videiras", "name": "Mirante do Vale das Videiras", "lat": -22.4205, "lon": -43.232,
+              "kind": "sight", "category": "viewpoint",
+              "description": "Última parada antes da descida: vinhedos de serra e a estrada de terra que leva até eles.",
+              "dwell_min": 45, "arrive": "15:05", "depart": "15:50",
+              "opening_hours": "", "url": "",
+              "osm_id": "node/6620110394", "wikidata_id": "", "score": 0.59,
+              "provenance": { "source": "curated", "detail": "Ponto acrescentado à mão em data/petropolis.yml; o OSM não tem nó de mirante aqui.", "as_of": "2026-08-20" }
+            }
+          ],
+          "legs": [
+            { "from_id": "s-quitandinha", "to_id": "s-parnaso", "mode": "car", "distance_km": 14.9, "duration_min": 26.0, "cost_brl": 8.4,
+              "provenance": { "source": "measured", "detail": "OSRM (carro); combustível a R$ 6,20/L e 11 km/L.", "as_of": "2026-09-16" } },
+            { "from_id": "s-parnaso", "to_id": "s-bauernstube", "mode": "car", "distance_km": 11.3, "duration_min": 19.0, "cost_brl": 6.37,
+              "provenance": { "source": "measured", "detail": "OSRM (carro); combustível a R$ 6,20/L e 11 km/L.", "as_of": "2026-09-16" } },
+            { "from_id": "s-bauernstube", "to_id": "s-veu-noiva", "mode": "car", "distance_km": 6.4, "duration_min": 13.0, "cost_brl": 3.6,
+              "provenance": { "source": "measured", "detail": "OSRM (carro); combustível a R$ 6,20/L e 11 km/L.", "as_of": "2026-09-16" } },
+            { "from_id": "s-veu-noiva", "to_id": "s-videiras", "mode": "car", "distance_km": 9.0, "duration_min": 16.0, "cost_brl": 5.07,
+              "provenance": { "source": "estimated", "detail": "Trecho final em estrada de terra: o OSRM não roteia, então é linha reta × 1,30 a 55 km/h.", "as_of": "2026-09-16" } }
+          ],
+          "distance_km": 41.6,
+          "travel_duration_min": 74.0,
+          "walking_km": 2.6,
+          "travel_cost_brl": 23.44,
+          "notes": [
+            "Dia cheio: cinco paradas e 41,6 km de serra. O retorno ao Rio começa às 15h50.",
+            "A estrada até o Vale das Videiras tem trecho de terra — não vá se tiver chovido forte."
+          ]
+        }
+      ],
+      "costs": {
+        "lodging_brl": 1580.0,
+        "travel_to_brl": 109.84,
+        "travel_within_brl": 23.44,
+        "food_brl": 360.0,
+        "total_brl": 2073.28,
+        "per_person_brl": 1036.64,
+        "budget_brl": 2000.0,
+        "within_budget": false,
+        "estimated_items": ["lodging_brl", "food_brl", "travel_within_brl"]
+      },
+      "total_travel_min": 354.0,
+      "stop_count": 11
+    }
+  ]
+}
+</script>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============================== chrome strings ==============================
+     Only the chrome is translated. Everything that came from the solver — POI
+     names, reasons, notes, diagnostics — renders exactly as the JSON has it. */
+
+  var LABELS = {
+    "pt-BR": {
+      brand: "MATE",
+      tagline: "Make A Trip Easy",
+      arrow: "→",
+      nights: function (n) { return n === 1 ? "1 noite" : n + " noites"; },
+      people: function (n) { return n === 1 ? "1 pessoa" : n + " pessoas"; },
+      budgetCeiling: function (v) { return "teto de " + v; },
+      noBudget: "sem teto definido",
+      updatedAt: function (v) { return "Plano refeito em " + v; },
+      unknown: "—",
+
+      assumptionsTitle: "Partimos do princípio que",
+      assumptionsSub: "MATE não tem como saber isso sozinho. Cada linha é um chute declarado.",
+      replyHint: "Se algo aqui estiver errado, responda ao SMS (\"somos 4\", \"vamos de ônibus\") e o plano inteiro se refaz neste mesmo link.",
+
+      optionsTitle: function (n) { return n === 1 ? "Uma opção" : n + " opções"; },
+      optionsSub: "Mesmas datas, mesmas pessoas. Muda a base, o ritmo e o total.",
+      lockedTitle: "Plano confirmado",
+      lockedBadge: "confirmado",
+      lockedSub: "Vocês travaram esta opção. Responda \"mudar\" para ver as outras de novo.",
+      noOptions: "Nenhuma opção montada ainda. Responda ao SMS com as datas e o destino.",
+
+      axis: { cheapest: "Mais barato", least_travel: "Menos estrada", most_to_see: "Mais para ver" },
+
+      totalTitle: "Total da viagem",
+      perPerson: function (v) { return v + " por pessoa"; },
+      withinBudget: function (v) { return "Cabe no teto — sobram " + v; },
+      overBudget: function (v) { return "Estoura o teto em " + v; },
+      budgetUnset: "Sem teto para comparar",
+
+      costTitle: "Onde o dinheiro vai",
+      cost: {
+        lodging_brl: "Hospedagem",
+        travel_to_brl: "Ida e volta",
+        travel_within_brl: "Deslocamento no destino",
+        food_brl: "Comida",
+        total_brl: "Total"
+      },
+      softTotal: function (list) { return "Este total carrega estimativa: " + list + ". Não é um preço fechado."; },
+      softCost: "Linha estimada por nós, não confirmada por uma fonte.",
+
+      baseTitle: "Base",
+      perNightLabel: "Diária",
+      lodgingTotalLabel: "Hospedagem no total",
+      rating: function (v) { return "nota " + v; },
+      capacity: function (n) { return "cabe " + n; },
+      kitchen: "com cozinha",
+      openListing: "ver anúncio",
+
+      travelToTitle: "Estrada até lá",
+      roundTrip: "ida e volta",
+      oneWay: "só ida",
+      fuel: "combustível",
+      liters: function (v) { return v + " L"; },
+      tollsTitle: "Pedágio",
+      verifyToll: "conferir",
+
+      daysTitle: "Dia a dia",
+      dayNo: function (n) { return "Dia " + n; },
+      noDays: "Este plano ainda não tem dias montados.",
+      mode: { foot: "a pé", car: "de carro", ridehail: "de app", transit: "de ônibus" },
+      spread: function (v) { return "num raio de " + v; },
+      dayDistance: function (v) { return v + " de percurso"; },
+      dayDuration: function (v) { return v + " em deslocamento" ; },
+      dayCost: function (v) { return v + " de transporte no dia"; },
+      stopsCount: function (n) { return n === 1 ? "1 parada" : n + " paradas"; },
+      walkTitle: "A pé no dia",
+      walkLimit: function (v) { return "limite confortável: " + v; },
+      walkWarn: function (v) { return "Acima de " + v + " a pé num dia só, quase ninguém cumpre o roteiro até o fim. Corte a última parada ou faça esse trecho de carro."; },
+      dwell: function (v) { return "fica " + v; },
+      hours: function (v) { return "horário: " + v; },
+      openPoi: "site oficial",
+      kind: { sight: "ponto", meal: "refeição", base: "base" },
+
+      constraintsTitle: "O que vocês já combinaram",
+      constraintsSub: "Cada correção que chegou por SMS. Isto sobrevive ao próximo recálculo.",
+      noConstraints: "Nada ainda. O que vocês responderem por SMS aparece aqui.",
+
+      diagTitleDegraded: "Um passo do cálculo não rodou como devia",
+      diagTitleFailed: "Um passo do cálculo falhou",
+      diagSubDegraded: "O plano continua de pé, mas os números abaixo dependem do que não deu certo aqui.",
+      diagSubFailed: "Trate este plano como rascunho até o passo abaixo rodar de novo.",
+
+      whyBtn: "?",
+      whyBtnTitle: "como chegamos neste número",
+      source: { measured: "medido", estimated: "estimado", curated: "tabela curada" },
+      sourceExplain: {
+        measured: "Uma fonte de verdade respondeu: rota, anúncio ou registro do OpenStreetMap.",
+        estimated: "Nenhuma fonte respondeu; uma fórmula nossa entrou no lugar.",
+        curated: "Tabela que mantemos à mão, com data de revisão."
+      },
+      asOf: function (v) { return "em " + v; },
+      legendTitle: "Como ler os números",
+      legendApprox: function (s) { return "O sinal ≈ marca tudo que é " + s + ". Toque no ponto de interrogação ao lado para ver de onde veio."; },
+      footerNote: "Este link é o plano. Cada resposta sua por SMS reescreve esta mesma página.",
+      switchLang: "Read in English",
+
+      errTitle: "Não deu para ler este plano",
+      errBody: "O bloco de dados desta página está corrompido. Responda ao SMS com \"refazer\" e mandamos um link novo.",
+      renderErr: "Parte desta página não pôde ser montada."
+    },
+
+    en: {
+      brand: "MATE",
+      tagline: "Make A Trip Easy",
+      arrow: "→",
+      nights: function (n) { return n === 1 ? "1 night" : n + " nights"; },
+      people: function (n) { return n === 1 ? "1 person" : n + " people"; },
+      budgetCeiling: function (v) { return v + " ceiling"; },
+      noBudget: "no ceiling set",
+      updatedAt: function (v) { return "Re-solved " + v; },
+      unknown: "—",
+
+      assumptionsTitle: "We are assuming that",
+      assumptionsSub: "MATE cannot know these on its own. Each line is a guess, said out loud.",
+      replyHint: "If any of this is wrong, reply to the SMS (\"there are 4 of us\", \"we're taking the bus\") and the whole plan is rebuilt at this same link.",
+
+      optionsTitle: function (n) { return n === 1 ? "One option" : n + " options"; },
+      optionsSub: "Same dates, same people. The base, the pace and the total change.",
+      lockedTitle: "Locked in",
+      lockedBadge: "locked in",
+      lockedSub: "You picked this one. Reply \"change\" to see the others again.",
+      noOptions: "No options built yet. Reply to the SMS with your dates and destination.",
+
+      axis: { cheapest: "Cheapest", least_travel: "Least travel", most_to_see: "Most to see" },
+
+      totalTitle: "Trip total",
+      perPerson: function (v) { return v + " per person"; },
+      withinBudget: function (v) { return "Fits the ceiling — " + v + " left"; },
+      overBudget: function (v) { return "Over the ceiling by " + v; },
+      budgetUnset: "No ceiling to compare against",
+
+      costTitle: "Where the money goes",
+      cost: {
+        lodging_brl: "Lodging",
+        travel_to_brl: "Getting there and back",
+        travel_within_brl: "Getting around",
+        food_brl: "Food",
+        total_brl: "Total"
+      },
+      softTotal: function (list) { return "This total carries an estimate: " + list + ". It is not a firm price."; },
+      softCost: "A line we estimated, not one a source confirmed.",
+
+      baseTitle: "Base",
+      perNightLabel: "Per night",
+      lodgingTotalLabel: "Lodging in total",
+      rating: function (v) { return "rated " + v; },
+      capacity: function (n) { return "sleeps " + n; },
+      kitchen: "kitchen",
+      openListing: "open listing",
+
+      travelToTitle: "The drive",
+      roundTrip: "round trip",
+      oneWay: "one way",
+      fuel: "fuel",
+      liters: function (v) { return v + " L"; },
+      tollsTitle: "Tolls",
+      verifyToll: "check",
+
+      daysTitle: "Day by day",
+      dayNo: function (n) { return "Day " + n; },
+      noDays: "This plan has no days yet.",
+      mode: { foot: "on foot", car: "by car", ridehail: "by ridehail", transit: "by bus" },
+      spread: function (v) { return "within " + v; },
+      dayDistance: function (v) { return v + " covered"; },
+      dayDuration: function (v) { return v + " moving"; },
+      dayCost: function (v) { return v + " of transport"; },
+      stopsCount: function (n) { return n === 1 ? "1 stop" : n + " stops"; },
+      walkTitle: "Walking today",
+      walkLimit: function (v) { return "comfortable limit: " + v; },
+      walkWarn: function (v) { return "Past " + v + " of walking in one day, almost nobody finishes the itinerary. Drop the last stop or drive that leg."; },
+      dwell: function (v) { return "stay " + v; },
+      hours: function (v) { return "hours: " + v; },
+      openPoi: "official site",
+      kind: { sight: "sight", meal: "meal", base: "base" },
+
+      constraintsTitle: "What you have agreed on",
+      constraintsSub: "Every correction that arrived by SMS. This survives the next re-solve.",
+      noConstraints: "Nothing yet. Whatever you reply by SMS shows up here.",
+
+      diagTitleDegraded: "A step did not run the way it should",
+      diagTitleFailed: "A step of the calculation failed",
+      diagSubDegraded: "The plan still stands, but the numbers below depend on what went wrong here.",
+      diagSubFailed: "Treat this plan as a draft until the step below runs again.",
+
+      whyBtn: "?",
+      whyBtnTitle: "how we got this number",
+      source: { measured: "measured", estimated: "estimated", curated: "curated table" },
+      sourceExplain: {
+        measured: "A real source answered: a route, a listing, an OpenStreetMap record.",
+        estimated: "No source answered; a formula of ours stood in.",
+        curated: "A table we maintain by hand, with a review date."
+      },
+      asOf: function (v) { return "as of " + v; },
+      legendTitle: "How to read the numbers",
+      legendApprox: function (s) { return "The ≈ sign marks anything " + s + ". Tap the question mark beside it to see where it came from."; },
+      footerNote: "This link is the plan. Every SMS reply rewrites this same page.",
+      switchLang: "Ler em português",
+
+      errTitle: "We could not read this plan",
+      errBody: "The data block on this page is corrupted. Reply \"redo\" to the SMS and we will send a fresh link.",
+      renderErr: "Part of this page could not be built."
+    }
+  };
+
+  var WALK_LIMIT_KM = 8;
+  var APPROX = "≈";
+  var MID = "·";
+  var lang = "pt-BR";
+
+  /* ============================== tiny helpers ============================== */
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined && text !== null && text !== "") n.textContent = String(text);
+    return n;
+  }
+  function add(parent) {
+    for (var i = 1; i < arguments.length; i++) {
+      var k = arguments[i];
+      if (k) parent.appendChild(k);
+    }
+    return parent;
+  }
+  function arr(v) { return Array.isArray(v) ? v : []; }
+  function obj(v) { return (v && typeof v === "object" && !Array.isArray(v)) ? v : {}; }
+  function str(v) { return (v === undefined || v === null) ? "" : String(v); }
+  function num(v) { var n = typeof v === "number" ? v : parseFloat(v); return isFinite(n) ? n : 0; }
+  function has(v) { return str(v).trim() !== ""; }
+
+  function L(path) {
+    var parts = String(path).split(".");
+    function dig(root) {
+      var cur = root;
+      for (var i = 0; i < parts.length; i++) {
+        if (cur === undefined || cur === null) return undefined;
+        cur = cur[parts[i]];
+      }
+      return cur;
+    }
+    var v = dig(LABELS[lang]);
+    if (v === undefined) v = dig(LABELS.en);
+    return v;
+  }
+  function T(path) {
+    var v = L(path);
+    if (typeof v === "function") return v.apply(null, [].slice.call(arguments, 1));
+    return v === undefined ? "" : String(v);
+  }
+
+  /* ---------- formatting ---------- */
+
+  function nf(opts) {
+    try { return new Intl.NumberFormat(lang, opts); }
+    catch (e) {
+      try { return new Intl.NumberFormat("pt-BR", opts); } catch (e2) { return null; }
+    }
+  }
+  /* Money always keeps Brazilian notation (R$ 1.234,56), whatever the chrome
+     language is: the price is Brazilian, only the words around it are not. */
+  var moneyFmt;
+  function money(v) {
+    var n = num(v);
+    if (moneyFmt === undefined) {
+      try {
+        moneyFmt = new Intl.NumberFormat("pt-BR", {
+          style: "currency", currency: "BRL",
+          minimumFractionDigits: 2, maximumFractionDigits: 2
+        });
+      } catch (e) { moneyFmt = null; }
+    }
+    if (moneyFmt) { try { return moneyFmt.format(n); } catch (e) {} }
+    return "R$ " + n.toFixed(2);
+  }
+  function dec(v, places) {
+    var f = nf({ minimumFractionDigits: places, maximumFractionDigits: places });
+    if (f) { try { return f.format(num(v)); } catch (e) {} }
+    return num(v).toFixed(places);
+  }
+  function km(v) {
+    var n = num(v);
+    return dec(n, n === Math.round(n) ? 0 : 1) + " km";
+  }
+  function dur(mins) {
+    var m = Math.round(num(mins));
+    if (m <= 0) return "0 min";
+    var h = Math.floor(m / 60), r = m % 60;
+    if (h && r) return h + " h " + r + " min";
+    if (h) return h + " h";
+    return r + " min";
+  }
+  function parseDate(s) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(str(s));
+    if (!m) return null;
+    var d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return isNaN(d.getTime()) ? null : d;
+  }
+  function fmtDate(s, opts) {
+    var d = parseDate(s);
+    if (!d) return str(s) || T("unknown");
+    try { return new Intl.DateTimeFormat(lang, opts).format(d); } catch (e) { return str(s); }
+  }
+  function longDate(s) { return fmtDate(s, { weekday: "short", day: "numeric", month: "long" }); }
+  function shortDate(s) { return fmtDate(s, { day: "numeric", month: "short" }); }
+  function stamp(iso) {
+    var d = new Date(str(iso));
+    if (isNaN(d.getTime())) return str(iso);
+    try {
+      return new Intl.DateTimeFormat(lang, {
+        day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
+      }).format(d);
+    } catch (e) { return str(iso); }
+  }
+  function asOfText(v) {
+    var s = str(v);
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return fmtDate(s, { day: "numeric", month: "short", year: "numeric" });
+    return s;
+  }
+  function nightsBetween(a, b) {
+    var A = parseDate(a), B = parseDate(b);
+    if (!A || !B) return null;
+    var n = Math.round((B.getTime() - A.getTime()) / 86400000);
+    return n >= 1 ? n : 1;
+  }
+  function safeUrl(u) {
+    var s = str(u).trim();
+    return /^https?:\/\//i.test(s) ? s : "";
+  }
+  function link(url, text, cls) {
+    var href = safeUrl(url);
+    if (!href) return null;
+    var a = el("a", cls || null, text);
+    a.href = href;
+    a.rel = "noopener noreferrer nofollow";
+    a.target = "_blank";
+    return a;
+  }
+
+  /* ============================== provenance ==============================
+     Only "measured" prints as a plain number. Everything else prints with a
+     leading ≈ and a tappable note that says where the number came from. */
+
+  var whySeq = 0;
+
+  function isSoftSource(src) {
+    var s = str(src).toLowerCase();
+    return s !== "" && s !== "measured";
+  }
+
+  function noteText(prov, extra) {
+    var p = obj(prov);
+    var src = str(p.source).toLowerCase() || "estimated";
+    var bits = [];
+    var explain = T("sourceExplain." + src);
+    if (explain) bits.push(explain);
+    if (has(p.detail)) bits.push(str(p.detail));
+    if (has(extra)) bits.push(str(extra));
+    if (has(p.as_of)) bits.push(T("asOf", asOfText(p.as_of)));
+    return { label: T("source." + src) || src, body: bits.join(" ") };
+  }
+
+  /* Returns a <span> with the value, the ≈ when soft, and an expandable note. */
+  function figure(text, prov, opts) {
+    opts = opts || {};
+    var p = obj(prov);
+    var soft = opts.forceSoft === true || isSoftSource(p.source);
+    var wrap = el("span", "fig");
+
+    if (soft && opts.noApprox !== true) add(wrap, el("span", "approx", APPROX));
+    if (has(text)) add(wrap, el("span", null, text));
+
+    if (!soft) return wrap;
+
+    var parts = noteText(p, opts.extra);
+    var note = el("span", "note");
+    add(note, el("b", "src", parts.label + (parts.body ? ": " : "")));
+    if (parts.body) add(note, document.createTextNode(parts.body));
+    note.hidden = true;
+    note.id = "n" + (++whySeq);
+
+    var btn = el("button", "why-btn", T("whyBtn"));
+    btn.type = "button";
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-controls", note.id);
+    btn.setAttribute("aria-label", T("whyBtnTitle"));
+    btn.title = T("whyBtnTitle");
+    btn.addEventListener("click", function (ev) {
+      ev.stopPropagation();
+      ev.preventDefault();
+      var open = note.hidden;
+      note.hidden = !open;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    add(wrap, btn, note);
+    return wrap;
+  }
+
+  /* ============================== sections ============================== */
+
+  function renderMast(state) {
+    var intake = obj(state.intake);
+    var head = el("header", "mast");
+
+    var brand = el("div", "brand");
+    add(brand, el("span", "name", T("brand")), el("span", "tag", T("tagline")));
+    add(head, brand);
+
+    var h1 = el("h1", "route");
+    add(h1, el("span", null, has(intake.origin) ? str(intake.origin) : T("unknown")));
+    add(h1, el("span", "arr", " " + T("arrow") + " "));
+    add(h1, el("span", null, has(intake.region) ? str(intake.region) : T("unknown")));
+    add(head, h1);
+
+    var facts = el("div", "facts");
+    var pieces = [];
+
+    var n = nightsBetween(intake.start_date, intake.end_date);
+    if (has(intake.start_date) || has(intake.end_date)) {
+      var range = shortDate(intake.start_date) + " " + T("arrow") + " " + shortDate(intake.end_date);
+      pieces.push(range + (n ? " " + MID + " " + T("nights", n) : ""));
+    }
+    var party = parseInt(intake.party_size, 10);
+    if (isFinite(party) && party > 0) pieces.push(T("people", party));
+    var budget = num(intake.budget_total_brl);
+    pieces.push(budget > 0 ? T("budgetCeiling", money(budget)) : T("noBudget"));
+
+    pieces.forEach(function (p, i) {
+      if (i) add(facts, el("span", "sep", MID));
+      add(facts, el("span", null, p));
+    });
+    add(head, facts);
+
+    if (has(state.updated_at)) {
+      add(head, el("p", "kicker stamp", T("updatedAt", stamp(state.updated_at))));
+    }
+    return head;
+  }
+
+  function renderDiagnostics(state) {
+    var bad = arr(state.diagnostics).filter(function (d) {
+      var s = str(obj(d).status).toLowerCase();
+      return s === "failed" || s === "degraded";
+    });
+    if (!bad.length) return null;
+
+    var anyFailed = bad.some(function (d) { return str(obj(d).status).toLowerCase() === "failed"; });
+    var box = el("div", "banner" + (anyFailed ? " bad" : ""));
+    box.setAttribute("role", anyFailed ? "alert" : "status");
+    add(box, el("h2", null, anyFailed ? T("diagTitleFailed") : T("diagTitleDegraded")));
+    add(box, el("p", "small", anyFailed ? T("diagSubFailed") : T("diagSubDegraded")));
+
+    var ul = el("ul");
+    bad.forEach(function (d) {
+      d = obj(d);
+      var li = el("li");
+      add(li, el("span", "step", str(d.step) || "?"));
+      add(li, document.createTextNode(" " + MID + " "));
+      add(li, document.createTextNode(str(d.status).toLowerCase()));
+      if (has(d.detail)) {
+        add(li, el("br"));
+        add(li, document.createTextNode(str(d.detail)));
+      }
+      add(ul, li);
+    });
+    add(box, ul);
+
+    var sec = el("section");
+    add(sec, box);
+    return sec;
+  }
+
+  function renderAssumptions(state) {
+    var list = arr(state.assumptions).filter(function (a) { return has(obj(a).text) || has(obj(a).key); });
+    if (!list.length) return null;
+
+    var sec = el("section");
+    var head = el("div", "sec-head");
+    add(head, el("h2", null, T("assumptionsTitle")));
+    add(head, el("p", "sub", T("assumptionsSub")));
+    add(sec, head);
+
+    var card = el("div", "card assump");
+    var ol = el("ol");
+    list.forEach(function (a) {
+      a = obj(a);
+      var li = el("li");
+      add(li, el("span", "dot"));
+      var body = el("span");
+      add(body, el("span", "text", has(a.text) ? str(a.text) : str(a.key) + ": " + str(a.value)));
+      if (has(a.key)) {
+        var k = el("span", "key", str(a.key) + (has(a.value) ? " = " + str(a.value) : ""));
+        add(body, el("br"), k);
+      }
+      add(li, body);
+      add(ol, li);
+    });
+    add(card, ol);
+    add(card, el("p", "reply-hint", T("replyHint")));
+    add(sec, card);
+    return sec;
+  }
+
+  /* ---------- costs ---------- */
+
+  var COST_KEYS = ["lodging_brl", "travel_to_brl", "travel_within_brl", "food_brl"];
+
+  function softKeys(costs) {
+    var raw = arr(costs.estimated_items).map(function (s) {
+      return str(s).toLowerCase().trim().replace(/_brl$/, "");
+    });
+    return raw;
+  }
+  function isSoftLine(costs, key) {
+    var bare = key.toLowerCase().replace(/_brl$/, "");
+    return softKeys(costs).indexOf(bare) !== -1;
+  }
+  function softLineNames(costs) {
+    var names = softKeys(costs).map(function (bare) {
+      return T("cost." + bare + "_brl") || bare;
+    });
+    return names.join(", ");
+  }
+
+  function renderHero(option) {
+    var costs = obj(option.costs);
+    var anySoft = softKeys(costs).length > 0;
+    var box = el("div", "hero");
+
+    add(box, el("span", "kicker", T("totalTitle")));
+
+    var amount = el("span", "amount num");
+    add(amount, figure(money(costs.total_brl), null, {
+      forceSoft: anySoft,
+      extra: anySoft ? T("softTotal", softLineNames(costs)) : ""
+    }));
+    add(box, amount);
+
+    var pp = num(costs.per_person_brl);
+    if (pp > 0) add(box, el("p", "pp num", T("perPerson", money(pp))));
+
+    var budget = num(costs.budget_brl);
+    if (budget > 0) {
+      var diff = budget - num(costs.total_brl);
+      var over = costs.within_budget === false || diff < 0;
+      var chip = el("span", "fit" + (over ? " over" : ""),
+        over ? T("overBudget", money(Math.abs(diff))) : T("withinBudget", money(Math.abs(diff))));
+      add(box, chip);
+    } else {
+      add(box, el("span", "fit none", T("budgetUnset")));
+    }
+    return box;
+  }
+
+  function renderCosts(option) {
+    var costs = obj(option.costs);
+    var block = el("div", "block");
+    add(block, el("span", "kicker", T("costTitle")));
+
+    var rows = el("div", "rows");
+    COST_KEYS.forEach(function (key) {
+      /* Every line always prints, zero included: a zero is information here. */
+      var v = num(costs[key]);
+      var row = el("div", "row");
+      add(row, el("span", "lab", T("cost." + key) || key));
+      var val = el("span", "val num");
+      add(val, figure(money(v), null, {
+        forceSoft: isSoftLine(costs, key),
+        extra: T("softCost")
+      }));
+      add(row, val);
+      add(rows, row);
+    });
+
+    var total = el("div", "row total");
+    add(total, el("span", "lab", T("cost.total_brl")));
+    var tv = el("span", "val num");
+    add(tv, figure(money(costs.total_brl), null, { forceSoft: softKeys(costs).length > 0 }));
+    add(total, tv);
+    add(rows, total);
+
+    add(block, rows);
+    return block;
+  }
+
+  /* ---------- base + drive ---------- */
+
+  function renderBase(option) {
+    var base = obj(option.base);
+    if (!has(base.name) && num(base.total_price_brl) === 0) return null;
+
+    var block = el("div", "block");
+    add(block, el("span", "kicker", T("baseTitle")));
+    add(block, el("p", "base-name", has(base.name) ? str(base.name) : T("unknown")));
+
+    var meta = el("div", "meta");
+    var bits = [];
+    if (has(base.city)) bits.push(el("span", null, str(base.city)));
+    if (num(base.rating) > 0) bits.push(el("span", "num", T("rating", dec(base.rating, 2))));
+    if (num(base.capacity) > 0) bits.push(el("span", null, T("capacity", Math.round(num(base.capacity)))));
+    if (base.has_kitchen === true) bits.push(el("span", null, T("kitchen")));
+    var a = link(base.url, T("openListing"));
+    if (a) bits.push(a);
+    bits.forEach(function (b, i) {
+      if (i) add(meta, el("span", "sep", MID));
+      add(meta, b);
+    });
+    if (bits.length) add(block, meta);
+
+    var rows = el("div", "rows");
+    if (num(base.price_per_night_brl) > 0) {
+      var r1 = el("div", "row");
+      add(r1, el("span", "lab", T("perNightLabel")));
+      var v1 = el("span", "val num");
+      add(v1, figure(money(base.price_per_night_brl), base.provenance));
+      add(r1, v1);
+      add(rows, r1);
+    }
+    var r2 = el("div", "row");
+    add(r2, el("span", "lab", T("lodgingTotalLabel")));
+    var v2 = el("span", "val num");
+    add(v2, figure(money(base.total_price_brl), base.provenance));
+    add(r2, v2);
+    add(rows, r2);
+    add(block, rows);
+
+    return block;
+  }
+
+  function renderTravelTo(option) {
+    var t = obj(option.travel_to);
+    if (num(t.distance_km) === 0 && num(t.total_cost_brl) === 0) return null;
+
+    var block = el("div", "block");
+    add(block, el("span", "kicker", T("travelToTitle")));
+
+    var head = el("div", "day-head");
+    add(head, el("span", "badge", T("mode." + str(t.mode).toLowerCase()) || str(t.mode)));
+    add(head, el("span", "small muted", t.round_trip === false ? T("oneWay") : T("roundTrip")));
+    add(block, head);
+
+    var stats = el("div", "daystats num");
+    var s = [];
+    if (num(t.distance_km) > 0) s.push(km(t.distance_km));
+    if (num(t.duration_min) > 0) s.push(dur(t.duration_min));
+    if (num(t.liters) > 0) s.push(T("liters", dec(t.liters, 2)));
+    s.forEach(function (x, i) {
+      if (i) add(stats, el("span", "sep", MID));
+      add(stats, el("span", null, x));
+    });
+    if (s.length) add(block, stats);
+
+    var rows = el("div", "rows");
+    if (num(t.fuel_cost_brl) > 0) {
+      var rf = el("div", "row");
+      add(rf, el("span", "lab", T("fuel")));
+      var vf = el("span", "val num");
+      add(vf, figure(money(t.fuel_cost_brl), t.provenance));
+      add(rf, vf);
+      add(rows, rf);
+    }
+    if (num(t.toll_cost_brl) > 0) {
+      var rt = el("div", "row");
+      add(rt, el("span", "lab", T("tollsTitle")));
+      var vt = el("span", "val num");
+      add(vt, figure(money(t.toll_cost_brl), { source: "curated", detail: "", as_of: str(obj(t.provenance).as_of) }));
+      add(rt, vt);
+      add(rows, rt);
+    }
+    var rtot = el("div", "row total");
+    add(rtot, el("span", "lab", T("cost.travel_to_brl")));
+    var vtot = el("span", "val num");
+    add(vtot, figure(money(t.total_cost_brl), t.provenance));
+    add(rtot, vtot);
+    add(rows, rtot);
+    add(block, rows);
+
+    var tolls = arr(t.tolls);
+    if (tolls.length) {
+      var list = el("div", "tolls");
+      tolls.forEach(function (x) {
+        x = obj(x);
+        var row = el("div", "toll");
+        var left = el("span", "tname");
+        add(left, document.createTextNode(has(x.name) ? str(x.name) : T("tollsTitle")));
+        var sub = [];
+        if (has(x.road)) sub.push(str(x.road));
+        if (has(x.operator)) sub.push(str(x.operator));
+        if (sub.length) add(left, el("span", "muted", " " + MID + " " + sub.join(" " + MID + " ")));
+        var check = link(x.verify_url, T("verifyToll"), "tiny");
+        if (check) { add(left, document.createTextNode(" ")); add(left, check); }
+        add(row, left, el("span", "num", money(x.price_brl)));
+        add(list, row);
+      });
+      add(block, list);
+    }
+    return block;
+  }
+
+  /* ---------- days ---------- */
+
+  function renderWalking(day) {
+    var walked = num(day.walking_km);
+    if (walked <= 0) return null;
+    var over = walked > WALK_LIMIT_KM;
+    var box = el("div", "walk" + (over ? " warn" : ""));
+
+    var top = el("div", "top");
+    add(top, el("span", null, T("walkTitle")));
+    add(top, el("span", "num", km(walked)));
+    add(box, top);
+
+    var bar = el("div", "bar");
+    var fill = el("i");
+    var pct = Math.max(2, Math.min(100, (walked / WALK_LIMIT_KM) * 100));
+    fill.style.width = pct + "%";
+    add(bar, fill);
+    add(box, bar);
+
+    add(box, el("p", "msg", over ? T("walkWarn", km(WALK_LIMIT_KM)) : T("walkLimit", km(WALK_LIMIT_KM))));
+    return box;
+  }
+
+  function renderStop(stop) {
+    stop = obj(stop);
+    var row = el("div", "stop");
+
+    var when = el("div", "when num");
+    if (has(stop.arrive)) add(when, el("div", null, str(stop.arrive)));
+    if (has(stop.depart)) add(when, el("div", "dep", str(stop.depart)));
+    if (!has(stop.arrive) && !has(stop.depart)) add(when, el("div", "dep", T("unknown")));
+    add(row, when);
+
+    var body = el("div", "body");
+    add(body, el("p", "nm", has(stop.name) ? str(stop.name) : T("unknown")));
+    if (has(stop.description)) add(body, el("p", "desc", str(stop.description)));
+
+    var tags = el("div", "tags");
+    var items = [];
+    var kindLabel = T("kind." + str(stop.kind).toLowerCase());
+    if (kindLabel) items.push(el("span", "k", kindLabel));
+    if (has(stop.category)) items.push(el("span", "k", str(stop.category)));
+    if (num(stop.dwell_min) > 0) items.push(el("span", null, T("dwell", dur(stop.dwell_min))));
+    if (has(stop.opening_hours)) items.push(el("span", null, T("hours", str(stop.opening_hours))));
+    var a = link(stop.url, T("openPoi"));
+    if (a) items.push(a);
+    items.forEach(function (x) { add(tags, x); });
+
+    var prov = obj(stop.provenance);
+    if (isSoftSource(prov.source)) {
+      var mark = figure(T("source." + str(prov.source).toLowerCase()) || str(prov.source), prov, { noApprox: true });
+      mark.className = "fig soft-tag";
+      add(tags, mark);
+    }
+    if (items.length || isSoftSource(prov.source)) add(body, tags);
+
+    add(row, body);
+    return row;
+  }
+
+  function renderLeg(leg) {
+    leg = obj(leg);
+    var row = el("div", "leg");
+    var rail = el("div", "rail");
+    add(rail, el("span"));
+    add(row, rail);
+
+    var txt = el("div", "txt");
+    var modeLabel = T("mode." + str(leg.mode).toLowerCase()) || str(leg.mode);
+    if (modeLabel) add(txt, el("span", null, modeLabel));
+
+    var prov = obj(leg.provenance);
+    var pieces = [];
+    if (num(leg.distance_km) > 0) pieces.push(km(leg.distance_km));
+    if (num(leg.duration_min) > 0) pieces.push(dur(leg.duration_min));
+    if (pieces.length) {
+      var span = el("span", "num");
+      add(span, figure(pieces.join(" " + MID + " "), prov));
+      add(txt, span);
+    }
+    if (num(leg.cost_brl) > 0) {
+      var c = el("span", "num");
+      add(c, figure(money(leg.cost_brl), prov));
+      add(txt, c);
+    }
+    add(row, txt);
+    return row;
+  }
+
+  function renderDay(day, index) {
+    day = obj(day);
+    var box = el("article", "card day");
+
+    var head = el("div", "day-head");
+    var title = el("h3", null, has(day.date) ? longDate(day.date) : T("dayNo", index + 1));
+    add(head, title);
+    var mode = str(day.travel_within).toLowerCase();
+    var badge = el("span", "badge" + (mode === "foot" ? " foot" : ""), T("mode." + mode) || mode || T("unknown"));
+    add(head, badge);
+    add(box, head);
+
+    if (has(day.mode_reason)) add(box, el("p", "reason", str(day.mode_reason)));
+
+    var stats = el("div", "daystats num");
+    var s = [];
+    var stops = arr(day.stops);
+    if (stops.length) s.push(T("stopsCount", stops.length));
+    if (num(day.spread_km) > 0) s.push(T("spread", km(day.spread_km)));
+    if (num(day.distance_km) > 0) s.push(T("dayDistance", km(day.distance_km)));
+    if (num(day.travel_duration_min) > 0) s.push(T("dayDuration", dur(day.travel_duration_min)));
+    if (num(day.travel_cost_brl) > 0) s.push(T("dayCost", money(day.travel_cost_brl)));
+    s.forEach(function (x, i) {
+      if (i) add(stats, el("span", "sep", MID));
+      add(stats, el("span", null, x));
+    });
+    if (s.length) add(box, stats);
+
+    var walk = renderWalking(day);
+    if (walk) add(box, walk);
+
+    var legs = arr(day.legs);
+    var byPair = {};
+    legs.forEach(function (lg) {
+      var k = str(obj(lg).from_id) + ">" + str(obj(lg).to_id);
+      if (!byPair[k]) byPair[k] = lg;
+    });
+
+    if (!stops.length) {
+      add(box, el("p", "empty", T("noDays")));
+    } else {
+      var used = {};
+      stops.forEach(function (stop, i) {
+        add(box, renderStop(stop));
+        if (i < stops.length - 1) {
+          var key = str(obj(stop).id) + ">" + str(obj(stops[i + 1]).id);
+          var lg = byPair[key];
+          if (!lg && legs[i] && !used[i]) { lg = legs[i]; used[i] = true; }
+          if (lg) add(box, renderLeg(lg));
+        }
+      });
+    }
+
+    var notes = arr(day.notes).filter(has);
+    if (notes.length) {
+      var ul = el("ul", "notes");
+      notes.forEach(function (n) { add(ul, el("li", null, str(n))); });
+      add(box, ul);
+    }
+    return box;
+  }
+
+  /* ---------- one option ---------- */
+
+  function optionTotalNode(option) {
+    var costs = obj(option.costs);
+    var soft = softKeys(costs).length > 0;
+    var span = el("span", "num");
+    if (soft) add(span, el("span", "approx", APPROX));
+    add(span, document.createTextNode(money(costs.total_brl)));
+    return span;
+  }
+
+  function renderOptionPanel(option, locked) {
+    var panel = el("div", "panel");
+    panel.setAttribute("role", "tabpanel");
+
+    var head = el("div", "opt-head");
+    var axis = T("axis." + str(option.axis).toLowerCase());
+    if (locked) {
+      add(head, el("span", "lock", T("lockedBadge")));
+    } else if (axis) {
+      add(head, el("p", "kicker", axis));
+    }
+    add(head, el("h2", null, has(option.label) ? str(option.label) : (axis || T("unknown"))));
+    if (has(option.why)) add(head, el("p", "why", str(option.why)));
+    if (locked) add(head, el("p", "small muted", T("lockedSub")));
+    add(panel, head);
+
+    var money_card = el("div", "card block");
+    add(money_card, renderHero(option));
+    add(money_card, renderCosts(option));
+    var base = renderBase(option);
+    if (base) add(money_card, base);
+    var drive = renderTravelTo(option);
+    if (drive) add(money_card, drive);
+    add(panel, money_card);
+
+    var days = arr(option.days);
+    var daysSec = el("section");
+    var dh = el("div", "sec-head");
+    add(dh, el("h2", null, T("daysTitle")));
+    add(daysSec, dh);
+    if (!days.length) {
+      var empty = el("div", "card");
+      add(empty, el("p", "empty", T("noDays")));
+      add(daysSec, empty);
+    } else {
+      days.forEach(function (d, i) { add(daysSec, renderDay(d, i)); });
+    }
+    add(panel, daysSec);
+
+    return panel;
+  }
+
+  function renderOptions(state) {
+    var all = arr(state.options).filter(function (o) { return o && typeof o === "object"; });
+    var sec = el("section");
+
+    if (!all.length) {
+      var head0 = el("div", "sec-head");
+      add(head0, el("h2", null, T("optionsTitle", 0)));
+      add(sec, head0);
+      var card = el("div", "card");
+      add(card, el("p", "empty", T("noOptions")));
+      add(sec, card);
+      return sec;
+    }
+
+    var selectedId = str(state.selected_option_id).trim();
+    var locked = null;
+    if (selectedId) {
+      for (var i = 0; i < all.length; i++) {
+        if (str(all[i].id) === selectedId) { locked = all[i]; break; }
+      }
+    }
+
+    var head = el("div", "sec-head");
+    if (locked) {
+      add(head, el("h2", null, T("lockedTitle")));
+    } else {
+      add(head, el("h2", null, T("optionsTitle", all.length)));
+      add(head, el("p", "sub", T("optionsSub")));
+    }
+    add(sec, head);
+
+    if (locked) {
+      add(sec, renderOptionPanel(locked, true));
+      return sec;
+    }
+
+    var tabs = el("div", "tabs");
+    tabs.setAttribute("role", "tablist");
+    var panels = [];
+    var buttons = [];
+
+    all.forEach(function (option, i) {
+      var id = "opt" + i;
+      var btn = el("button", "tab");
+      btn.type = "button";
+      btn.id = "tab-" + id;
+      btn.setAttribute("role", "tab");
+      btn.setAttribute("aria-controls", "panel-" + id);
+      btn.setAttribute("aria-selected", i === 0 ? "true" : "false");
+      btn.tabIndex = i === 0 ? 0 : -1;
+
+      var axis = T("axis." + str(option.axis).toLowerCase());
+      add(btn, el("span", "kicker axis", axis || " "));
+      add(btn, el("span", "lab", has(option.label) ? str(option.label) : (axis || T("unknown"))));
+      var amt = el("span", "amt");
+      add(amt, optionTotalNode(option));
+      add(btn, amt);
+
+      var panel = renderOptionPanel(option, false);
+      panel.id = "panel-" + id;
+      panel.setAttribute("aria-labelledby", "tab-" + id);
+      panel.hidden = i !== 0;
+
+      function select() {
+        buttons.forEach(function (b, j) {
+          b.setAttribute("aria-selected", j === i ? "true" : "false");
+          b.tabIndex = j === i ? 0 : -1;
+        });
+        panels.forEach(function (p, j) { p.hidden = j !== i; });
+      }
+      btn.addEventListener("click", select);
+      btn.addEventListener("keydown", function (ev) {
+        var d = ev.key === "ArrowRight" || ev.key === "ArrowDown" ? 1
+              : ev.key === "ArrowLeft" || ev.key === "ArrowUp" ? -1 : 0;
+        if (!d) return;
+        ev.preventDefault();
+        var next = buttons[(i + d + buttons.length) % buttons.length];
+        if (next) { next.focus(); next.click(); }
+      });
+
+      buttons.push(btn);
+      panels.push(panel);
+      add(tabs, btn);
+    });
+
+    add(sec, tabs);
+    panels.forEach(function (p) { add(sec, p); });
+    return sec;
+  }
+
+  /* ---------- constraints, footer ---------- */
+
+  function renderConstraints(state) {
+    var list = arr(state.constraints).filter(function (c) { return has(obj(c).text) || has(obj(c).value); });
+    var sec = el("section");
+    var head = el("div", "sec-head");
+    add(head, el("h2", null, T("constraintsTitle")));
+    add(head, el("p", "sub", T("constraintsSub")));
+    add(sec, head);
+
+    var card = el("div", "card");
+    if (!list.length) {
+      add(card, el("p", "empty", T("noConstraints")));
+    } else {
+      var ul = el("ul", "cons");
+      list.forEach(function (c) {
+        c = obj(c);
+        var li = el("li");
+        add(li, el("span", "kind", has(c.kind) ? str(c.kind) : "note"));
+        var body = el("span");
+        add(body, el("span", "ctext", has(c.text) ? str(c.text) : str(c.value)));
+        add(li, body);
+        add(ul, li);
+      });
+      add(card, ul);
+    }
+    add(sec, card);
+    return sec;
+  }
+
+  function renderFooter(state) {
+    var f = el("footer");
+    add(f, el("p", "kicker", T("legendTitle")));
+
+    var ul = el("ul", "legend");
+    ["measured", "estimated", "curated"].forEach(function (src) {
+      var li = el("li");
+      add(li, el("b", null, (src === "measured" ? "" : APPROX + " ") + T("source." + src) + " "));
+      add(li, document.createTextNode(T("sourceExplain." + src)));
+      add(ul, li);
+    });
+    var li2 = el("li", null, T("legendApprox", T("source.estimated") + " / " + T("source.curated")));
+    add(ul, li2);
+    add(f, ul);
+
+    add(f, el("p", "tiny muted", T("footerNote")));
+
+    var bar = el("div", "langbar");
+    var btn = el("button", "langbtn", T("switchLang"));
+    btn.type = "button";
+    btn.addEventListener("click", function () {
+      lang = (lang === "pt-BR") ? "en" : "pt-BR";
+      draw(state);
+    });
+    add(bar, btn);
+    add(f, bar);
+    return f;
+  }
+
+  /* ============================== bootstrap ============================== */
+
+  function draw(state) {
+    var root = document.getElementById("app");
+    if (!root) return;
+    root.textContent = "";
+
+    document.documentElement.lang = lang;
+    var intake = obj(state.intake);
+    var title = [str(intake.origin), str(intake.region)].filter(has).join(" " + T("arrow") + " ");
+    document.title = (title ? title + " " + MID + " " : "") + T("brand");
+
+    add(root, renderMast(state));
+
+    var diag = renderDiagnostics(state);
+    if (diag) add(root, diag);
+
+    var assum = renderAssumptions(state);
+    if (assum) add(root, assum);
+
+    add(root, renderOptions(state));
+    add(root, renderConstraints(state));
+    add(root, renderFooter(state));
+  }
+
+  function fallback(message, detail) {
+    var root = document.getElementById("app");
+    if (!root) return;
+    root.textContent = "";
+    var box = el("div", "fallback");
+    add(box, el("h1", null, T("errTitle")));
+    add(box, el("p", null, message || T("errBody")));
+    if (detail) add(box, el("pre", null, String(detail).slice(0, 600)));
+    add(root, box);
+  }
+
+  function boot() {
+    var node = document.getElementById("plan");
+    var state = null;
+    try {
+      if (!node) throw new Error("missing #plan block");
+      state = JSON.parse(node.textContent || "{}");
+      if (!state || typeof state !== "object" || Array.isArray(state)) {
+        throw new Error("plan block is not an object");
+      }
+    } catch (err) {
+      lang = "pt-BR";
+      fallback(T("errBody"), err && err.message);
+      return;
+    }
+
+    var want = str(state.lang).trim();
+    lang = LABELS[want] ? want : "pt-BR";
+
+    try {
+      draw(state);
+    } catch (err) {
+      try {
+        fallback(T("renderErr"), err && err.message);
+      } catch (e2) {
+        var root = document.getElementById("app");
+        if (root) root.textContent = "MATE";
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>

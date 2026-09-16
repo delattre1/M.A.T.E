@@ -1,0 +1,95 @@
+# MATE's half of ~/.hermes — everything that is a deliberate choice for this
+# deployment, and nothing else.
+#
+# Overrides only. Keys equal to the image's own defaults are deliberately
+# absent so the image supplies its current defaults instead of a frozen
+# snapshot.
+#
+# _config_version IS required, contrary to what this file used to say. An
+# unversioned config is not read as current — the base's config-migrate reads
+# it as predating version 12 and refuses to migrate it, and says so on every
+# boot:
+#
+#   [config-migrate] WARNING: This config predates version 12 (~2 years old)
+#   and can no longer be auto-migrated ... or manually set _config_version: 12
+#
+# 12 is the version that warning names, which is the schema the keys below are
+# written against. Bump it only after reading the base's changelog.
+_config_version: 12
+#
+# BASE-OWNED KEYS ARE NOT HERE, AND MUST NOT BE ADDED.
+# plow-init rewrites `mcp_servers.plow`, `model` and `providers` in this file on
+# every boot, from the base image's seed and the agent's Plow credential. It
+# leaves every other mcp_servers entry alone — which is what makes the airbnb
+# entry below survive a boot. A tracked copy of one of those three could only
+# drift from what actually runs, and would read like a decision this repo made.
+#
+# The authoritative copy of this file is /opt/plow/mate/home/config.yaml in the
+# image, not the one in the home: the home is a named volume, and a volume
+# seeds from the image only while it is EMPTY, so a home that already exists
+# shadows every later revision (plow-hermes-agent#58).
+# 05-install-mate-payload.sh reinstalls it from there on every boot.
+
+mcp_servers:
+  # Airbnb, for the lodging leg of a trip plan.
+  #
+  # What this server can and cannot do here, measured rather than assumed:
+  # `airbnb_search` hits /s/<place>/homes, and Airbnb's robots.txt disallows
+  # `/s/*/*` for the wildcard user-agent, so it returns a refusal. That is the
+  # expected result, not a fault — MATE prices lodging from a curated tier table
+  # instead (data/lodging_tiers_rj.json) and says so in the plan.
+  # `airbnb_listing_details` reads /rooms/<id>, which robots.txt does NOT
+  # disallow, so a listing the user hands us does return its real price. Both
+  # stay in the allowlist: the search refusal is cheap and self-documenting.
+  #
+  # ---------------------------------------------------------------------------
+  # ROBOTS OVERRIDE: DELIBERATELY ABSENT. KEEP IT ABSENT.
+  # ---------------------------------------------------------------------------
+  # @openbnb/mcp-server-airbnb honours robots.txt by default and exposes a
+  # `--ignore-robots-txt` flag (and an `ignoreRobotsText` setting) that turns
+  # that off. Neither appears anywhere in this file, in `args`, or in `env`,
+  # and neither should ever be added.
+  #
+  # This is not a style preference. Judges install this repo and run it on
+  # their own machines, against a third-party site, under their own IP — a step
+  # entirely outside our control and one we cannot supervise. Shipping an image
+  # that quietly disables a site's crawl policy on someone else's connection is
+  # a risk taken on their behalf without asking. The default behaviour is the
+  # correct behaviour; if a search returns nothing, that is the answer.
+  #
+  # If you are reading this because a tool call came back empty: the fix is a
+  # narrower query or a different source, not this flag.
+  # ---------------------------------------------------------------------------
+  #
+  # `command: node` with the script's absolute path rather than the
+  # `mcp-server-airbnb` console script or `npx -y`. The package is installed
+  # into the image at build time (see the Dockerfile), so there is nothing to
+  # fetch at boot; naming the entry point directly also means the launch does
+  # not depend on a shebang or an exec bit surviving the npm install. The build
+  # asserts this exact path exists, so a version bump that moves it fails the
+  # build rather than the boot.
+  airbnb:
+    command: node
+    args:
+      - /opt/plow/mate/airbnb-mcp/node_modules/@openbnb/mcp-server-airbnb/dist/index.js
+    enabled: true
+    # The server scrapes and parses pages rather than calling a JSON API, so a
+    # cold search is slow — well past the 60s a default-timeout tool call
+    # allows, and a trip plan asks for several. 120s is what the other variants
+    # give their scraping-backed servers.
+    timeout: 120
+    # Left at the image default (60s). It is a local `node` exec of a file the
+    # build already proved is there, so the handshake is immediate; the reason
+    # it is written out rather than omitted is that this is the value `npx -y`
+    # would have had to beat, and stating it is what makes that tradeoff
+    # legible next to the Dockerfile's note.
+    connect_timeout: 60
+    tools:
+      # The two the planner uses. The package ships no others that a trip plan
+      # needs, and an allowlist rather than an exclude list means a new tool in
+      # a later version arrives disabled and has to be added on purpose.
+      include:
+        - airbnb_search
+        - airbnb_listing_details
+      resources: false
+      prompts: false

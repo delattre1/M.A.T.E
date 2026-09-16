@@ -1,0 +1,9 @@
+#!/bin/sh
+# Stable entry point for the solver, so skills can scope a tool matcher to it.
+set -eu
+MATE_HOME="${MATE_HOME:-/opt/plow/mate}"
+if [ ! -d "$MATE_HOME/mate" ]; then
+  MATE_HOME="$(cd "$(dirname "$0")/.." && pwd)"
+fi
+export PYTHONPATH="$MATE_HOME${PYTHONPATH:+:$PYTHONPATH}"
+exec python3 -m mate.cli "$@"

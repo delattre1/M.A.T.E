@@ -1,0 +1,26 @@
+# Optional, and worth it: without these MATE still plans, but every distance
+# and time is a straight-line estimate and the plan says so on every line.
+#
+# Run infra/osrm/setup.sh first to build the data.
+#
+# OSRM ignores the profile segment in the request URL — the port is what selects
+# car or foot, because each container was built from a different profile.
+
+services:
+  osrm-car:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    command: osrm-routed --algorithm mld /data/${REGION:-rio-de-janeiro}-latest.osrm
+    volumes:
+      - ./infra/osrm/data/car:/data:ro
+    ports:
+      - "127.0.0.1:5000:5000"
+    restart: unless-stopped
+
+  osrm-foot:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    command: osrm-routed --algorithm mld /data/${REGION:-rio-de-janeiro}-latest.osrm
+    volumes:
+      - ./infra/osrm/data/foot:/data:ro
+    ports:
+      - "127.0.0.1:5001:5000"
+    restart: unless-stopped

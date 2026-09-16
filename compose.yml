@@ -1,0 +1,70 @@
+# MATE's runtime surface, in the shape the Plow variant repos use.
+#
+#   1. plow-agents mint          writes ./plow-credentials beside this file
+#   2. docker compose build      builds the image from this repo
+#   3. docker compose up -d      starts the agent
+#
+# When Plow runs this image as a cloud agent it sets the environment itself and
+# none of this file is read.
+services:
+  agent:
+    # Cold build needs the base first, and it is pinned by digest:
+    #   docker pull "$(awk '/^FROM/{print $2;exit}' Dockerfile)"
+    # For base-image pull failures, see README.md.
+    build: .
+    image: mate-hermes-agent:local
+    container_name: mate
+    # Never pull. This tag names only what the build above produces, so a
+    # registry copy must never win: the default and `missing` both PULL when
+    # the local tag is absent, which would run a different image under this
+    # agent's credentials than the one anyone inspected.
+    pull_policy: never
+    # The agent is long-lived and holds conversation state, so a crash or a
+    # host reboot should bring it back rather than leave it down silently.
+    restart: unless-stopped
+    # What `plow-agents mint` wrote: where Plow is and this agent's token. The
+    # base reads both from the environment; nothing copies a file into place.
+    # Compose fails here if the file is absent, which is the right order —
+    # minting comes first.
+    env_file: ./plow-credentials
+    environment:
+      # Who this agent is in the Agent Index. The s6 service defaults to the
+      # same name when the variable is unset, so this line is the readable copy
+      # of that default rather than the only place it lives. Setting it EMPTY
+      # is how you turn index reporting off.
+      AGENT_ID: ${AGENT_ID:-mate}
+      # Service names, not localhost: the routers are sibling containers, and
+      # 127.0.0.1 inside this one is this one. Unresolvable when the routers are
+      # not running, which Router treats as "down" and falls back to labelled
+      # straight-line estimates rather than failing the plan.
+      MATE_OSRM_CAR_URL: ${MATE_OSRM_CAR_URL:-http://osrm-car:5000}
+      MATE_OSRM_FOOT_URL: ${MATE_OSRM_FOOT_URL:-http://osrm-foot:5000}
+    volumes:
+      # The agent's home, kept across `up`/`down` for its sessions, its plan
+      # cache and its setup. A volume rather than a bind so it survives
+      # up/down and initialises from the image's payload while empty; nothing
+      # mounts over a path the boot hardens, because plow-init chowns SOUL.md
+      # and chmods the home on every boot and a read-only mount at one of those
+      # fails EROFS and parks the boot before any gateway starts.
+      #
+      # A skill edit or a config.yaml edit reaches an EXISTING home on rebuild
+      # + restart — the base reconciles skills and
+      # 05-install-mate-payload.sh reinstalls config.yaml — so only a full
+      # reset needs `down -v`.
+      - agent-home:/var/lib/hermes
+    # No ports, inbound or otherwise. The dashboard stays off: publishing it
+    # means binding 0.0.0.0 inside the container, which Hermes refuses without
+    # an auth provider because it holds API keys. The agent reaches Plow
+    # outbound, and the Airbnb MCP server is a stdio child process, not a port.
+    #
+    # Egress IS required: the base talks to Plow, and the MATE payload talks to
+    # OSRM/Overpass/Photon/Nominatim/Wikidata.
+    #
+    # The agent checkpoints its session on SIGTERM and s6 allows 30s for that
+    # (S6_SERVICES_GRACETIME=30000, baked into the base), so Docker's own
+    # deadline has to sit outside that one — equal or lower and Docker kills
+    # the container mid-checkpoint.
+    stop_grace_period: 35s
+
+volumes:
+  agent-home:
