@@ -18,7 +18,7 @@
 # To bump: `docker buildx imagetools inspect <tag>`, take the top `Digest:`
 # line (the INDEX digest; a per-platform manifest digest does not resolve as a
 # FROM).
-FROM public.ecr.aws/e1h7x4a2/plow-cloud-agents:base-c96adf18b1b660d059efb0429df455558cdb1ef0@sha256:6c4089e1002fcfb9de4378992a43285040f7c8676e62662e206762820e41b913
+FROM public.ecr.aws/e1h7x4a2/plow-cloud-agents:base-51f83158a70a383f03a4d03dbd8b6ea102cf0361@sha256:253d7ed3409effa7fa59113d93b4b79bb731d8264cdaf4cd60294924d0110a2e
 
 # ---------------------------------------------------------------------------
 # Identity
